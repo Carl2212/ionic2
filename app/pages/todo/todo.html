@@ -1,0 +1,18 @@
+<ion-header>
+  <ion-navbar>
+    <button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>待办</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+  <ion-list>
+    <button ion-item *ngFor="let item of listinfo" (click)="openlist()">
+      <p>{{item.module_name}}</p>
+      <div class="item-note" item-right>
+        <ion-badge>{{item.count}}</ion-badge>
+      </div>
+    </button>
+  </ion-list>
+</ion-content>

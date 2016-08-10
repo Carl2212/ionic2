@@ -1,0 +1,66 @@
+<ion-header>
+  <ion-navbar class="header">
+    <button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>通讯录</ion-title>
+    <button class="ab-icon-circle" *ngIf="selectedItem" item-right (click)="updo()">
+      <ion-icon name="undo" item-left></ion-icon>
+    </button>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content>
+  <ion-list *ngIf="!selectedItem">
+    <button ion-item *ngFor="let item of items" (click)="itemTapped($event, item)">
+      <ion-icon name="contacts" item-left></ion-icon>
+      {{item.groupname}}
+      <div class="item-note" item-right>
+        <ion-icon name="more" item-left></ion-icon>
+      </div>
+    </button>
+  </ion-list>
+  <ion-list *ngIf="selectedItem && !selecteduser">
+    <button ion-item *ngFor="let user of useritems" (click)="userinfo($event, user)">
+      <ion-row>
+        <ion-col><ion-icon name="contact" item-left></ion-icon>{{user.cnname}}</ion-col>
+        <ion-col><ion-icon name="phone-portrait" item-left *ngIf="user.mobile"></ion-icon>{{user.mobile}}</ion-col>
+        <ion-col>
+          <a class="col-right"> <ion-icon name="tablet-portrait" item-left></ion-icon></a>
+          <a class="col-right"> <ion-icon name="mail" item-left></ion-icon></a>
+        </ion-col>
+      </ion-row>
+    </button>
+  </ion-list>
+  <ion-card *ngIf="selectedItem && selecteduser">
+    <ion-card-header>成员信息</ion-card-header>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col>姓名</ion-col>
+          <ion-col>{{selecteduser.cnname}}</ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>部门</ion-col>
+          <ion-col>{{selecteduser.groupname}}</ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>办公电话</ion-col>
+          <ion-col>{{selecteduser.officephone}}</ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>手机号</ion-col>
+          <ion-col>{{selecteduser.mobile}}</ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>邮箱</ion-col>
+          <ion-col>{{selecteduser.email}}</ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+    <ion-item>
+      <button item-right (click)="closecard()">关闭</button>
+    </ion-item>
+  </ion-card>
+</ion-content>

@@ -1,0 +1,53 @@
+@mixin transform-rotate($rotate-deg) {
+  transform:rotate($rotate-deg);
+  -ms-transform:rotate($rotate-deg); 	/* IE 9 */
+  -moz-transform:rotate($rotate-deg); 	/* Firefox */
+  -webkit-transform:rotate($rotate-deg); /* Safari 和 Chrome */
+  -o-transform:rotate($rotate-deg); 	/* Opera */
+}
+.tab-hd{
+  padding : 0;
+  margin: auto auto 0 0;
+  .tab-btn {
+    background : #fff;
+    float : left;
+    color:#135cc2;
+    border : 1px solid rgba(100,100,100,.5);
+    box-shadow: none;
+    margin : auto auto -1px 0;
+  }
+  .tab-btn.selected {
+    border-bottom : transparent;
+  }
+}
+.no-mbottom {
+  margin: 2px auto;
+  border-top : 1px solid #eee;
+}
+.no-border {
+  border : none !important;
+  padding : 0;
+  height : 3rem !important;
+  min-height : 3rem !important;
+  ion-label{
+    padding : 0;
+    margin : 0 auto;
+    text-align: center;
+    height : 100%;
+    .rotate-icon{
+      border : none !important;
+      @include transform-rotate(90deg) ;
+      margin : 0 auto !important;
+      line-height : 3rem !important;
+      font-size: 3rem;
+      font-weight : 200;
+    }
+  }
+}
+
+.item-fl-r{
+  float :right;
+}
+.hd-hr{
+  border-bottom : 1px solid rgba(100,100,100,.5);
+}

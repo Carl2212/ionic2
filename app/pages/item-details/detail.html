@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-navbar>
+    <button menuToggle *ngIf="!selectedItem">
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>{{simpleinfo.topic | base64pipe}}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-row class="hd-hr">
+        <ion-col class="tab-hd">
+          <button small [ngClass]="{'tab-btn':true,'selected' : isdetail}" (click)="isdetail=true;isprocess=false">详情</button>
+          <button small [ngClass]="{'tab-btn':true,'selected' : isprocess}" (click)="isdetail=false;isprocess=true">流程跟踪</button>
+        </ion-col>
+        <ion-col>
+          <button small (click)="readed()">已阅</button>
+          <button small (click)="sendread()">转传阅</button>
+        </ion-col>
+      </ion-row>
+    </ion-card-header>
+    <ion-card-content *ngIf="isdetail">
+      <ion-grid>
+        <ion-row *ngFor="let dl of detail">
+          <ion-col>{{dl.label}}</ion-col>
+          <ion-col>{{dl.text}}</ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+    <ion-card-content *ngIf="isprocess">
+      <ion-list *ngFor="let ps of process | keys">
+        <ion-card class="no-mbottom">
+          <ion-row *ngFor="let p of ps.value">
+            <ion-col>{{p.label}}</ion-col>
+            <ion-col>{{p.text}}</ion-col>
+          </ion-row>
+        </ion-card>
+        <ion-item class="no-border">
+          <ion-icon name="git-commit" class="rotate-icon" *ngIf="!((process.length-1) == ps.key)" ></ion-icon>
+        </ion-item>
+      </ion-list>
+
+    </ion-card-content>
+  </ion-card>
+</ion-content>
+

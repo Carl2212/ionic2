@@ -1,0 +1,52 @@
+<ion-header>
+  <ion-navbar>
+    <button menuToggle *ngIf="!selectedItem">
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>{{pageparam.operating}}</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+  <ion-item>
+    <button small item-right (click)="Submitfn()">提交</button>
+  </ion-item>
+  <my-options></my-options>
+  <ion-card>
+    <ion-card-header>
+      <ion-item>
+        <ion-label item-left>传阅</ion-label>
+          <ion-checkbox primary large item-right (click)="selectitemsfn()" *ngIf="isnull" [(ngModel)] ="toreadcheckbox"></ion-checkbox>
+          <a item-right (click)="selectitemsfn()" *ngIf="selectitems && !isnull"><ion-icon name="reorder"></ion-icon></a>
+      </ion-item>
+      <ion-card *ngIf="openitems">
+        <ion-item-list *ngFor="let items of selectitems">
+          <ion-list-header>
+              <ion-label item-left small  (click)="nextselectfn(items.groupid)">{{items.groupname}}</ion-label>
+              <ion-checkbox item-right dark [(ngModel)] ="nextcheckbox[items.groupid]" (ngModelChange)="selectall(items.groupid,$event)"></ion-checkbox>
+          </ion-list-header>
+          <div  *ngIf="nextselect && nextselect[items.groupid] && nextselect[items.groupid]['isopen']">
+            <ion-item *ngFor="let useritem of nextselect[items.groupid]">
+              <ion-label>{{useritem.username}}</ion-label>
+              <ion-checkbox dark [(ngModel)] = "selectusers[useritem.userid+'@'+useritem.username]" (ngModelChange)="selusers()" ></ion-checkbox>
+            </ion-item>
+          </div>
+        </ion-item-list>
+        <ion-item-list>
+          <ion-item>
+            <button small item-right (click)="sureselectfn()" >确定</button>
+          </ion-item>
+        </ion-item-list>
+      </ion-card>
+    </ion-card-header>
+
+    <ion-card-content *ngIf="!openitems">
+      <span *ngFor="let sel of selectusers | keys">
+        <button small class="withclosebadge"  *ngIf="selectusers[sel.key]"  (click)="del(sel.key)">
+          {{sel.key | keytoparams:1}} |
+          <ion-icon name="close" item-right></ion-icon>
+        </button>
+      </span>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

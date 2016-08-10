@@ -1,0 +1,40 @@
+.getting-started {
+  background: url(../../images/background.jpg) no-repeat;
+  background-size : 100% 100%;
+  color : #000;
+  .toolbar-title{
+    color : #000;
+    font-size : 1.8rem;
+    font-weight : bold;
+  }
+  .hello-a-full{
+    display: block;
+    text-decoration: none;
+    width: 100%;
+  }
+  .hello-a {
+    text-decoration: none;
+    position: relative;
+    .ab-badge {
+      position:absolute;
+      left: 50%;
+      top:0;
+      margin-left:1rem;
+    }
+  }
+  .mg-item{
+    margin-bottom:10px;
+    $item-bg-color : rgba(255,255,255,.6);
+    background: $item-bg-color;
+    border-color : $item-bg-color;
+    .nav-icon {
+      display: block;
+      margin : 5px auto;
+      width: 30px;
+      height : auto;
+    }
+    .cl{
+      text-align: center;
+    }
+  }
+}

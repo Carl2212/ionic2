@@ -1,0 +1,12 @@
+{
+  "name": "ionic2-app-base",
+  "app_id": "",
+  "typescript": true,
+  "v2": true,
+  "proxies": [
+    {
+      "path": "/ms/wap/execute?cmd=wxlogin&command=wxlogin",
+      "proxyUrl": "http://localhost:8100/api"
+    }
+  ]
+}
