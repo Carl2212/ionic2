@@ -76,6 +76,7 @@ export class DetailPage {
 
   //传阅（进入dotosubmit）
   sendread() {
+    console.log({nextparam : this.nextparam[0],detailinfo : this.detailinfo});
     this.navcontrol.push(DoToSubmitPage,{nextparam : this.nextparam[0],detailinfo : this.detailinfo});
   }
   //提交已阅(只是单纯接口先不做)

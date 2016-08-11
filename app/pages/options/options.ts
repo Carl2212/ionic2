@@ -1,18 +1,22 @@
 /**
  * Created by Deng on 2016/8/10.
  */
-import {Component} from '@angular/core';
-import {NavController, NavParams} from 'ionic-angular';
-import {ConfigComponent} from "../config";
+import {Component,Input ,Output ,EventEmitter} from '@angular/core';
 
 @Component({
-  templateUrl : 'build/pages/item-details/detail.html',
-  selector : 'my-options'
+  selector : 'my-options',
+  templateUrl : 'build/pages/options/options.html',
+  inputs : ['myoptions']
 })
 
 export class OptionsComponent {
-
-  constructor(navParams:NavParams, navcontrol:NavController) {
-
+  @Input() myoptions:any;
+  @Output() onoptions = new EventEmitter<any>();
+  public test : number = 1;
+  private cdr : any;
+  constructor() {
+  }
+  alertop($event) {
+    this.onoptions.emit($event);
   }
 }

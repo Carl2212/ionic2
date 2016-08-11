@@ -11,16 +11,29 @@ var __metadata = (this && this.__metadata) || function (k, v) {
  * Created by Deng on 2016/8/10.
  */
 var core_1 = require('@angular/core');
-var ionic_angular_1 = require('ionic-angular');
 var OptionsComponent = (function () {
-    function OptionsComponent(navParams, navcontrol) {
+    function OptionsComponent() {
+        this.onoptions = new core_1.EventEmitter();
+        this.test = 1;
     }
+    OptionsComponent.prototype.alertop = function ($event) {
+        this.onoptions.emit($event);
+    };
+    __decorate([
+        core_1.Input(), 
+        __metadata('design:type', Object)
+    ], OptionsComponent.prototype, "myoptions", void 0);
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', Object)
+    ], OptionsComponent.prototype, "onoptions", void 0);
     OptionsComponent = __decorate([
         core_1.Component({
-            templateUrl: 'build/pages/item-details/detail.html',
-            selector: 'my-options'
+            selector: 'my-options',
+            templateUrl: 'build/pages/options/options.html',
+            inputs: ['myoptions']
         }), 
-        __metadata('design:paramtypes', [ionic_angular_1.NavParams, ionic_angular_1.NavController])
+        __metadata('design:paramtypes', [])
     ], OptionsComponent);
     return OptionsComponent;
 })();

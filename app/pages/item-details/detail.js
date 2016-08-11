@@ -65,6 +65,7 @@ var DetailPage = (function () {
     };
     //传阅（进入dotosubmit）
     DetailPage.prototype.sendread = function () {
+        console.log({ nextparam: this.nextparam[0], detailinfo: this.detailinfo });
         this.navcontrol.push(dotosubmit_1.DoToSubmitPage, { nextparam: this.nextparam[0], detailinfo: this.detailinfo });
     };
     //提交已阅(只是单纯接口先不做)
