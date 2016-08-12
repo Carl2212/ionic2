@@ -69,7 +69,6 @@ var CommonComponent = (function () {
             }
             jdata.push(tmp);
         }
-        console.log(jdata);
         return jdata;
     };
     //通用方法之列项数量的获取

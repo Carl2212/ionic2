@@ -11,14 +11,80 @@ var __metadata = (this && this.__metadata) || function (k, v) {
  * Created by Deng on 2016/7/27.
  */
 var core_1 = require('@angular/core');
+var ionic_angular_1 = require('ionic-angular');
+var config_1 = require("../config");
+var postrequest_1 = require('../postrequest');
+var index_1 = require("ionic-angular/index");
+var common_1 = require("../common");
 var NoticeListPage = (function () {
-    function NoticeListPage() {
+    function NoticeListPage(navCtrl, navParams, postrequest, config, commonfn) {
+        this.isdetail = false;
+        this.navCtrl = navCtrl;
+        this.navParams = navParams;
+        this.postrequest = postrequest;
+        this.config = config;
+        this.storage = new index_1.Storage(index_1.SqlStorage);
+        this.commonfn = commonfn;
+        this.Initpage('PublishInfo', 1);
     }
+    //初始化页面数据
+    NoticeListPage.prototype.Initpage = function (module_id, pageindex) {
+        if (!pageindex)
+            pageindex = 1;
+        //读取存储数据
+        var _this = this;
+        _this.storage.getJson('userinfo').then(function (info) {
+            //post参数
+            var jsonParams = [
+                { key: 'username', value: info.username },
+                { key: 'qybm', value: _this.config.getValue('global_qybm') },
+                { key: 'xmbm', value: _this.config.getValue('global_xmbm') },
+                { key: 'userid', value: info.userid },
+                { key: 'moduleid', value: module_id },
+                { key: 'pageindex', value: pageindex },
+                { key: 'pagesize', value: _this.config.getValue('pagesize') }
+            ];
+            var doclisturl = _this.config.getValue('global_url') + _this.config.getValue('noticelist_action');
+            _this.postrequest.prequest(jsonParams, doclisturl, function (data) {
+                if (data.header.code == 1 && data.result.success == 1) {
+                    _this.doclist = _this.commonfn.ParamsToJson(data.result.noticelist);
+                    console.log(_this.doclist);
+                }
+            });
+        });
+    };
+    NoticeListPage.prototype.opendetail = function (doc) {
+        //读取存储数据
+        var _this = this;
+        _this.storage.getJson('userinfo').then(function (info) {
+            //post参数
+            var jsonParams = [
+                { key: 'username', value: info.username },
+                { key: 'qybm', value: _this.config.getValue('global_qybm') },
+                { key: 'xmbm', value: _this.config.getValue('global_xmbm') },
+                { key: 'userid', value: info.userid },
+                { key: 'moduleid', value: doc.moduleid },
+                { key: 'noticeid', value: doc.noticeid },
+            ];
+            var doclisturl = _this.config.getValue('global_url') + _this.config.getValue('noticedetail_action');
+            _this.postrequest.prequest(jsonParams, doclisturl, function (data) {
+                if (data.header.code == 1 && data.result.success == 1) {
+                    _this.docdetail = data.result.detail.item;
+                    _this.isdetail = true;
+                    console.log(_this.docdetail);
+                }
+            });
+        });
+    };
+    NoticeListPage.prototype.updo = function () {
+        this.isdetail = false;
+    };
     NoticeListPage = __decorate([
         core_1.Component({
-            templateUrl: 'build/pages/notice/noticelist.html'
+            templateUrl: 'build/pages/notice/noticelist.html',
+            providers: [config_1.ConfigComponent, postrequest_1.PostRequest, common_1.CommonComponent],
         }), 
-        __metadata('design:paramtypes', [])
+        __metadata('design:paramtypes', [ionic_angular_1.NavController, ionic_angular_1.NavParams, postrequest_1.PostRequest, config_1.ConfigComponent, common_1.CommonComponent])
     ], NoticeListPage);
     return NoticeListPage;
 })();

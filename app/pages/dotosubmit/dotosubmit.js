@@ -21,34 +21,70 @@ var config_1 = require("../config");
 var postrequest_1 = require('../postrequest');
 var index_1 = require("ionic-angular/index");
 var base64pipe_1 = require("../base64pipe");
+var isArray_1 = require("rxjs/util/isArray");
 var toread_1 = require("../toread/toread");
 var options_1 = require("../options/options");
 var tosbread_1 = require("../tosbread/tosbread");
 var ionic_angular_2 = require('ionic-angular');
 var DoToSubmitPage = (function () {
-    function DoToSubmitPage(navParams, navcontroller, postrequest, config, cdr, alertcmp) {
+    function DoToSubmitPage(navParams, navcontroller, postrequest, config, cdr) {
         this.addressType = '0'; //'0' or 'C'
         this.sureselect = false;
+        this.issbread = false;
         this.pageparam = navParams.get('nextparam');
         this.detailinfo = navParams.get('detailinfo');
+        console.log(this.pageparam, this.detailinfo);
         this.navcontroller = navcontroller;
         this.storage = new index_1.Storage(index_1.SqlStorage);
         this.postrequest = postrequest;
         this.config = config;
-        this.alertcmp = alertcmp;
-        //this.cdr = cdr;
+        this.cdr = cdr;
+        //请求接口获取当前模块操作项
+        if (this.pageparam.doctype == 'todo') {
+            this.nextroute();
+        }
+        if (this.pageparam.doctype == 'toread' || this.detailinfo.detailparam.moduleid == 'accept_doc_manager') {
+            this.issbread = true;
+        }
     }
+    DoToSubmitPage.prototype.nextroute = function () {
+        //获取存储的个人信息数据
+        var _this = this;
+        _this.storage.get('userinfo').then(function (info) {
+            info = JSON.parse(info);
+            var detailurl = _this.config.getValue('global_url') + _this.config.getValue('nextroute_action');
+            var jsonParams = [
+                { key: 'qybm', value: _this.config.getValue('global_qybm') },
+                { key: 'xmbm', value: _this.config.getValue('global_xmbm') },
+                { key: 'userid', value: info.userid },
+                { key: 'doctype', value: _this.pageparam.doctype },
+                { key: 'moduleid', value: _this.detailinfo.detailparam.moduleid },
+                { key: 'nodeid', value: _this.detailinfo.detailparam.nodeid },
+                { key: 'docid', value: _this.detailinfo.detailparam.docid },
+                { key: 'appid', value: _this.detailinfo.detailparam.appid },
+            ];
+            //请求
+            _this.postrequest.prequest(jsonParams, detailurl, function (data) {
+                if (data.header.code == 1 && data.result.success == 1 && data.result.nodelist) {
+                    _this.nodelist = data.result.nodelist.node;
+                    _this.umopinion = data.result.nodelist.umopinion;
+                    _this.cdr.detectChanges();
+                    if (!isArray_1.isArray(_this.nodelist))
+                        _this.nodelist = [_this.nodelist];
+                    console.log('nodelist', _this.nodelist);
+                }
+            });
+        });
+    };
     /*********************************************
      * 接收子组件的数据方法
      * ajax
      *********************************************/
     DoToSubmitPage.prototype.onoptions = function (options) {
         this.options = options;
-        //this.cdr.detectChanges();
     };
     DoToSubmitPage.prototype.onToSbRead = function (sb) {
         this.selectusers = sb;
-        //this.cdr.detectChanges();
     };
     /*********************************************
      * 提交传阅信息
@@ -79,32 +115,28 @@ var DoToSubmitPage = (function () {
             var dotosubmiturl = _this.config.getValue('global_url') + _this.config.getValue('toread_action');
             _this.postrequest.prequest(jsonParams, dotosubmiturl, function (data) {
                 if (data.header.code == 1 && data.result.success == 1) {
-                    _this.presentAlert('传阅成功~', '是否转为已读状态？');
-                    //跳转回list页面
-                    _this.navcontroller.push(toread_1.ToReadPage, { module_id: _this.detailinfo.detailparam.moduleid });
+                    _this.presentAlert({ subTitle: '传阅成功~是否转为已阅状态', buttons: [{ text: 'OK', handler: function () {
+                                    _this.navcontroller.push(toread_1.ToReadPage, { module_id: _this.detailinfo.detailparam.moduleid }); //跳转回list页面
+                                } }] });
                 }
                 else {
-                    _this.presentAlert('传阅失败!', '请重试');
+                    _this.presentAlert({ subTitle: '传阅失败~请重试', buttons: ['ok'] });
                 }
             });
         });
     };
-    DoToSubmitPage.prototype.presentAlert = function (tt, subt) {
-        var alert = this.alertcmp.create({
-            title: tt,
-            subTitle: subt,
-            buttons: ['ok']
-        });
-        alert.present();
+    DoToSubmitPage.prototype.presentAlert = function (initalert) {
+        var alert = ionic_angular_2.Alert.create(initalert);
+        this.navcontroller.present(alert);
     };
     DoToSubmitPage = __decorate([
         core_1.Component({
             templateUrl: 'build/pages/dotosubmit/dotosubmit.html',
-            providers: [config_1.ConfigComponent, postrequest_1.PostRequest, ionic_angular_2.Alert],
+            providers: [config_1.ConfigComponent, postrequest_1.PostRequest],
             directives: [options_1.OptionsComponent, tosbread_1.ToSbReadComponent],
             pipes: [base64pipe_1.KeysPipe, base64pipe_1.KeyToParamsPipe, base64pipe_1.NullToFalse]
         }), 
-        __metadata('design:paramtypes', [ionic_angular_1.NavParams, ionic_angular_1.NavController, postrequest_1.PostRequest, config_1.ConfigComponent, core_1.ChangeDetectorRef, ionic_angular_2.Alert])
+        __metadata('design:paramtypes', [ionic_angular_1.NavParams, ionic_angular_1.NavController, postrequest_1.PostRequest, config_1.ConfigComponent, core_1.ChangeDetectorRef])
     ], DoToSubmitPage);
     return DoToSubmitPage;
 })();

@@ -1,13 +1,38 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar class="header">
     <button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>My Notice-List</ion-title>
+    <ion-title>通知公告</ion-title>
+    <button class="ab-icon-circle" *ngIf="isdetail" item-right (click)="updo()">
+      <ion-icon name="undo" item-left></ion-icon>
+    </button>
   </ion-navbar>
 </ion-header>
 <ion-content>
-  <ion-list>
-    <ion-item></ion-item>
-  </ion-list>
+  <ion-card *ngIf="!isdetail">
+    <ion-card-header>列表</ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <a ion-item *ngFor="let doc of doclist" (click)="opendetail(doc)">
+          <p>{{doc.title}}</p>
+          <ion-note class="sm">{{doc.pTypeName}} &nbsp;{{doc.pubtime}}</ion-note>
+        </a>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+  <ion-card *ngIf="isdetail">
+    <ion-card-header>详情</ion-card-header>
+    <ion-card-content>
+      <ion-grid >
+        <ion-row *ngFor="let dl of docdetail">
+          <ion-col *ngIf="dl.formtype != 2">{{dl.label}}</ion-col>
+          <ion-col>
+            <a ng-href="dl.text" *ngIf="dl.formtype == 2">{{dl.label}}</a>
+            <span *ngIf="dl.formtype != 2">{{dl.text}}</span>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

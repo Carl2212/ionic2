@@ -1,7 +1,7 @@
 <ion-card>
   <ion-card-header>
     <ion-item>
-      <ion-label item-left>传阅</ion-label>
+      <ion-label item-left></ion-label>
       <ion-checkbox primary large item-right (click)="selectitemsfn()" *ngIf="isnull" [(ngModel)] ="toreadcheckbox"></ion-checkbox>
       <a item-right (click)="selectitemsfn()" *ngIf="selectitems && !isnull"><ion-icon name="reorder"></ion-icon></a>
     </ion-item>

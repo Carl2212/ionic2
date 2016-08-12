@@ -19,7 +19,7 @@ import {DetailPage} from "../item-details/detail";
 
 export class ToReadPage {
   private navCtrl : any;
-  private consttype : string = 'toread';
+  private consttype : string;
   private pagesize : number = 8;
   private listinfo : any;
   private commonfn : any;
@@ -36,6 +36,7 @@ export class ToReadPage {
     this.commonfn = commonfn;
     this.config = config;
     this.listinfo = navParams.get('item');
+    this.consttype = navParams.get('doctype');
     if(!this.listinfo) {
       let _this = this;
       _this.commonfn.gotCount(_this.consttype,function(count,modulelist){
@@ -95,7 +96,7 @@ export class ToReadPage {
       this.selecteditem = false;
   }
   opendetail(detail) {
-    this.navCtrl.push(DetailPage,{doc:detail,doctyoe : this.consttype});
+    this.navCtrl.push(DetailPage,{doc:detail,doctype : this.consttype});
   }
 
 

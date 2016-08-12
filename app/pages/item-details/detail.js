@@ -25,6 +25,7 @@ var DetailPage = (function () {
         this.isprocess = false;
         this.detailinfo = navParams.get('doc');
         this.consttype = navParams.get('doctype');
+        console.log(this.consttype);
         this.simpleinfo = this.detailinfo.view;
         this.commonfn = commonfn;
         this.postrequest = postrequest;
@@ -65,8 +66,11 @@ var DetailPage = (function () {
     };
     //传阅（进入dotosubmit）
     DetailPage.prototype.sendread = function () {
-        console.log({ nextparam: this.nextparam[0], detailinfo: this.detailinfo });
         this.navcontrol.push(dotosubmit_1.DoToSubmitPage, { nextparam: this.nextparam[0], detailinfo: this.detailinfo });
+    };
+    //审批（进入dotosubmit）
+    DetailPage.prototype.approval = function () {
+        this.navcontrol.push(dotosubmit_1.DoToSubmitPage, { nextparam: this.nextparam[1], detailinfo: this.detailinfo });
     };
     //提交已阅(只是单纯接口先不做)
     DetailPage.prototype.readed = function () {

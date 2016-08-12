@@ -4,6 +4,7 @@
 var ConfigComponent = (function () {
     function ConfigComponent() {
         this.Config = {
+            pagesize: 8,
             global_qybm: 'AYY',
             global_xmbm: 'AYYOA',
             author_check: false,
@@ -23,6 +24,9 @@ var ConfigComponent = (function () {
             userlist_action: '/wap/execute?cmd=userlist&command=userlist',
             //传阅提交
             toread_action: '/wap/execute?cmd=toread&command=toread',
+            //通知-列表数据以及详情数据
+            noticelist_action: '/wap/execute?cmd=noticelist&command=noticelist',
+            noticedetail_action: '/wap/execute?cmd=noticedetail&command=noticedetail',
         };
     }
     ConfigComponent.prototype.getValue = function (key) {

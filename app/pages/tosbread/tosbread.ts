@@ -1,7 +1,7 @@
 /**
  * Created by Deng on 2016/8/10.
  */
-import {Component , ChangeDetectorRef ,Output , EventEmitter } from '@angular/core';
+import {Component , ChangeDetectorRef ,Input,Output , EventEmitter } from '@angular/core';
 import {SelectPage} from "../selectpage/selectpage";
 import {KeysPipe,KeyToParamsPipe,NullToFalse} from "../base64pipe";
 import {CommonComponent} from "../common";
@@ -25,10 +25,12 @@ export class ToSbReadComponent {
   private commonfn:any;
   public selectusers: any = [];
   private cdr : any;
+  @Input() node : any;
   @Output() onToSbRead = new EventEmitter<any>();
   constructor(commonfn : CommonComponent ,cdr: ChangeDetectorRef) {
     this.commonfn = commonfn;
     this.cdr = cdr;
+    console.log(this.node);
   }
   onSelect(event) {
     this.selectusers =event;

@@ -23,6 +23,7 @@ var ToSbReadComponent = (function () {
         this.onToSbRead = new core_1.EventEmitter();
         this.commonfn = commonfn;
         this.cdr = cdr;
+        console.log(this.node);
     }
     ToSbReadComponent.prototype.onSelect = function (event) {
         this.selectusers = event;
@@ -95,6 +96,10 @@ var ToSbReadComponent = (function () {
         }
         return true;
     };
+    __decorate([
+        core_1.Input(), 
+        __metadata('design:type', Object)
+    ], ToSbReadComponent.prototype, "node", void 0);
     __decorate([
         core_1.Output(), 
         __metadata('design:type', Object)

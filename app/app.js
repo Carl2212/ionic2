@@ -14,7 +14,6 @@ var hello_ionic_1 = require('./pages/hello-ionic/hello-ionic');
 var txl_1 = require('./pages/txl/txl');
 var noticelist_1 = require('./pages/notice/noticelist');
 var docsearch_1 = require('./pages/docsearch/docsearch');
-var todo_1 = require('./pages/todo/todo');
 var toread_1 = require('./pages/toread/toread');
 var MyApp = (function () {
     function MyApp(platform, menu) {
@@ -25,12 +24,12 @@ var MyApp = (function () {
         this.initializeApp();
         // set our app's pages
         this.pages = [
-            { title: 'Hello Ionic111', component: hello_ionic_1.HelloIonicPage },
-            { title: '通讯录', component: txl_1.TxlPage },
-            { title: '待阅', component: toread_1.ToReadPage },
-            { title: '查文', component: docsearch_1.DocSearchPage },
-            { title: '待办', component: todo_1.ToDoPage },
-            { title: '公告通知', component: noticelist_1.NoticeListPage },
+            { title: 'Hello Ionic111', component: hello_ionic_1.HelloIonicPage, params: {} },
+            { title: '通讯录', component: txl_1.TxlPage, params: {} },
+            { title: '待阅', component: toread_1.ToReadPage, params: { doctype: 'toread' } },
+            { title: '查文', component: docsearch_1.DocSearchPage, params: {} },
+            { title: '待办', component: toread_1.ToReadPage, params: { doctype: 'todo' } },
+            { title: '公告通知', component: noticelist_1.NoticeListPage, params: {} },
         ];
     }
     MyApp.prototype.initializeApp = function () {
@@ -44,7 +43,7 @@ var MyApp = (function () {
         // close the menu when clicking a link from the menu
         this.menu.close();
         // navigate to the new page if it is not the current page
-        this.nav.setRoot(page.component);
+        this.nav.setRoot(page.component, page.params);
     };
     __decorate([
         core_1.ViewChild(ionic_angular_1.Nav), 

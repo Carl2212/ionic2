@@ -137,9 +137,9 @@ export class HelloIonicPage {
   }
 
 
-  openPage(p,item){
+  openPage(p,item,doctype){
       if(item) {
-        this.nav.setRoot(this.pages[p].component,{item : item});
+        this.nav.setRoot(this.pages[p].component,{item : item , doctype : doctype});
       }else{
         this.nav.setRoot(this.pages[p].component);
       }

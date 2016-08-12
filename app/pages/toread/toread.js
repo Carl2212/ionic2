@@ -21,7 +21,6 @@ var base64pipe_1 = require("../base64pipe");
 var detail_1 = require("../item-details/detail");
 var ToReadPage = (function () {
     function ToReadPage(navCtrl, navParams, commonfn, postrequest, config) {
-        this.consttype = 'toread';
         this.pagesize = 8;
         this.navCtrl = navCtrl;
         this.storage = new index_1.Storage(index_1.SqlStorage);
@@ -29,6 +28,7 @@ var ToReadPage = (function () {
         this.commonfn = commonfn;
         this.config = config;
         this.listinfo = navParams.get('item');
+        this.consttype = navParams.get('doctype');
         if (!this.listinfo) {
             var _this = this;
             _this.commonfn.gotCount(_this.consttype, function (count, modulelist) {
@@ -93,7 +93,7 @@ var ToReadPage = (function () {
         this.selecteditem = false;
     };
     ToReadPage.prototype.opendetail = function (detail) {
-        this.navCtrl.push(detail_1.DetailPage, { doc: detail, doctyoe: this.consttype });
+        this.navCtrl.push(detail_1.DetailPage, { doc: detail, doctype: this.consttype });
     };
     ToReadPage = __decorate([
         core_1.Component({

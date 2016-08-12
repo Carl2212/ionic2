@@ -11,9 +11,14 @@
     <button small item-right (click)="Submitfn()">提交</button>
   </ion-item>
   <!----------------------------------------------意见输入框--------------------------------------------------->
-  <my-options [myoptions] = "options" (onoptions)="onoptions($event)"></my-options>
+  <my-options [myoptions] = "options" [umopinion] = "umopinion" (onoptions)="onoptions($event)"></my-options>
+  <!----------------------------------------------------------------------------------------------------------->
+  <!---------------------------------------------- 操作项组件 --------------------------------------------------->
+  <div *ngIf="nodelist">
+    <tosbread-com [node] = "node.value" (onToSbRead)="onToSbRead($event)" *ngFor="let node of nodelist | keys"></tosbread-com>
+  </div>
   <!----------------------------------------------------------------------------------------------------------->
   <!---------------------------------------------- 传阅组件 --------------------------------------------------->
-  <tosbread-com (onToSbRead)="onToSbRead($event)"></tosbread-com>
+  <tosbread-com (onToSbRead)="onToSbRead($event)" *ngIf="issbread"></tosbread-com>
   <!----------------------------------------------------------------------------------------------------------->
 </ion-content>

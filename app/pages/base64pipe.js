@@ -61,6 +61,7 @@ var KeysPipe = (function () {
         for (var key in value) {
             keys.push({ key: key, value: value[key] });
         }
+        console.log('key', keys);
         return keys;
     };
     KeysPipe = __decorate([

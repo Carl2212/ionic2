@@ -1,6 +1,10 @@
 
 <ion-card>
+  <ion-card-header *ngIf="umopinion" class="card-hr">
+    <a class="fright" (click)="openumopinion()">常用意见<ion-icon name="reorder"></ion-icon></a>
+  </ion-card-header>
   <ion-card-content>
-    <ion-textarea [(ngModel)]="myoptions" (ngModelChange)="alertop($event)"  placeholder="请输入您的意见~" ></ion-textarea>
+    <ion-note></ion-note>
+    <ion-textarea class="small-bx" [(ngModel)]="myoptions" (ngModelChange)="alertop($event)"  placeholder="请输入您的意见~" ></ion-textarea>
   </ion-card-content>
 </ion-card>

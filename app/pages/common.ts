@@ -62,7 +62,6 @@ export class CommonComponent {
       }
       jdata.push(tmp);
     }
-    console.log(jdata);
     return jdata;
   }
 

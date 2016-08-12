@@ -34,6 +34,7 @@ export class DetailPage {
   constructor(navParams : NavParams , navcontrol : NavController , commonfn : CommonComponent , postrequest : PostRequest , config : ConfigComponent) {
     this.detailinfo = navParams.get('doc');
     this.consttype = navParams.get('doctype');
+    console.log(this.consttype);
     this.simpleinfo = this.detailinfo.view;
     this.commonfn = commonfn;
     this.postrequest = postrequest;
@@ -76,8 +77,12 @@ export class DetailPage {
 
   //传阅（进入dotosubmit）
   sendread() {
-    console.log({nextparam : this.nextparam[0],detailinfo : this.detailinfo});
     this.navcontrol.push(DoToSubmitPage,{nextparam : this.nextparam[0],detailinfo : this.detailinfo});
+  }
+
+  //审批（进入dotosubmit）
+  approval () {
+    this.navcontrol.push(DoToSubmitPage,{nextparam : this.nextparam[1],detailinfo : this.detailinfo});
   }
   //提交已阅(只是单纯接口先不做)
   readed() {
