@@ -6,6 +6,7 @@ import {TxlPage} from '../../pages/txl/txl';
 import {NoticeListPage} from '../../pages/notice/noticelist';
 import {DocSearchPage} from '../../pages/docsearch/docsearch';
 import {ToDoPage} from '../../pages/todo/todo';
+import {CordovaPage} from '../../pages/cordova/cordova';
 import {ToReadPage} from '../../pages/toread/toread';
 import {ConfigComponent} from '../config';
 import {Storage, SqlStorage} from "ionic-angular/index";
@@ -26,7 +27,6 @@ export class HelloIonicPage {
   private doctype;
   private isLeader;
   private cnname;
-  private tmp_todonum;
   public todonum : number = 0;
   public toreadnum : number = 0;
   private storage;
@@ -42,6 +42,7 @@ export class HelloIonicPage {
       { title:'DocSearchPage', component : DocSearchPage},
       { title:'ToDoPage', component : ToDoPage},
       { title:'NoticeListPage', component : NoticeListPage},
+      { title:'CordovaPage', component : CordovaPage},
     ];
     this.postrequest = postrequest;
     this.storage = new Storage(SqlStorage);
@@ -83,15 +84,15 @@ export class HelloIonicPage {
       if(this.username) {
         callback && callback();
       }else{
-        alert('..');
+        this.username="yujx",
+        callback && callback();
       }
     }
   }
   //判断登录
   isLogin(callback) {
     var userinfourl = this.config.getValue('global_url')+this.config.getValue('login_action');
-    console.log(this.config.getValue('global_url'),userinfourl);
-    this.username = this.getURLParam('username');
+    console.log('username' , this.username);
     var jsonParams = [
       {key : 'username',value : this.username},
       {key : 'qybm',value : this.config.getValue('global_qybm')},
@@ -138,9 +139,11 @@ export class HelloIonicPage {
 
 
   openPage(p,item,doctype){
+      console.log(p,this.pages[p]);
       if(item) {
         this.nav.setRoot(this.pages[p].component,{item : item , doctype : doctype});
       }else{
+        console.log(p,this.pages[p]);
         this.nav.setRoot(this.pages[p].component);
       }
   }

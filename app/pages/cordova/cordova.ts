@@ -8,13 +8,15 @@ import {PostRequest} from '../postrequest';
 import {Storage,SqlStorage} from "ionic-angular/index";
 import {isArray} from "rxjs/util/isArray";
 import {CommonComponent} from "../common";
+import { ActionSheet } from 'ionic-native';
+
 
 @Component({
-  templateUrl : 'build/pages/notice/noticelist.html',
+  templateUrl : 'build/pages/cordova/cordova.html',
   providers : [ConfigComponent,PostRequest,CommonComponent],
 })
 
-export class NoticeListPage {
+export class CordovaPage {
   private navCtrl :any;
   private navParams :any;
   private postrequest :any;
@@ -39,8 +41,21 @@ export class NoticeListPage {
     if(this.doc) {
       this.detailpage(this.doc);
     }
+    this.inactionsheet();
   }
 
+  inactionsheet() {
+    let buttonLabels = ['Share via Facebook', 'Share via Twitter'];
+    console.log(ActionSheet);
+    ActionSheet.show({
+      'title': 'What do you want with this image?',
+      'buttonLabels': buttonLabels,
+      'addCancelButtonWithLabel': 'Cancel',
+      'addDestructiveButtonWithLabel' : 'Delete'
+    }).then((buttonIndex: number) => {
+      console.log('Button pressed: ' + buttonIndex);
+    });
+  }
 
     //初始化页面数据
   Initpage(module_id,pageindex){
@@ -67,7 +82,7 @@ export class NoticeListPage {
     });
   }
   opendetail(doc) {
-    this.navCtrl.push(NoticeListPage , {docdetail : doc});
+    this.navCtrl.push(CordovaPage , {docdetail : doc});
   }
   detailpage(doc) {
     //读取存储数据

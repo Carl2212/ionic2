@@ -14,6 +14,7 @@ var txl_1 = require('../../pages/txl/txl');
 var noticelist_1 = require('../../pages/notice/noticelist');
 var docsearch_1 = require('../../pages/docsearch/docsearch');
 var todo_1 = require('../../pages/todo/todo');
+var cordova_1 = require('../../pages/cordova/cordova');
 var toread_1 = require('../../pages/toread/toread');
 var config_1 = require('../config');
 var index_1 = require("ionic-angular/index");
@@ -30,6 +31,7 @@ var HelloIonicPage = (function () {
             { title: 'DocSearchPage', component: docsearch_1.DocSearchPage },
             { title: 'ToDoPage', component: todo_1.ToDoPage },
             { title: 'NoticeListPage', component: noticelist_1.NoticeListPage },
+            { title: 'CordovaPage', component: cordova_1.CordovaPage },
         ];
         this.postrequest = postrequest;
         this.storage = new index_1.Storage(index_1.SqlStorage);
@@ -72,15 +74,15 @@ var HelloIonicPage = (function () {
                 callback && callback();
             }
             else {
-                alert('..');
+                this.username = "yujx",
+                    callback && callback();
             }
         }
     };
     //判断登录
     HelloIonicPage.prototype.isLogin = function (callback) {
         var userinfourl = this.config.getValue('global_url') + this.config.getValue('login_action');
-        console.log(this.config.getValue('global_url'), userinfourl);
-        this.username = this.getURLParam('username');
+        console.log('username', this.username);
         var jsonParams = [
             { key: 'username', value: this.username },
             { key: 'qybm', value: this.config.getValue('global_qybm') },
@@ -123,10 +125,12 @@ var HelloIonicPage = (function () {
         });
     };
     HelloIonicPage.prototype.openPage = function (p, item, doctype) {
+        console.log(p, this.pages[p]);
         if (item) {
             this.nav.setRoot(this.pages[p].component, { item: item, doctype: doctype });
         }
         else {
+            console.log(p, this.pages[p]);
             this.nav.setRoot(this.pages[p].component);
         }
     };

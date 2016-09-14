@@ -57,11 +57,12 @@ var KeysPipe = (function () {
     function KeysPipe() {
     }
     KeysPipe.prototype.transform = function (value, args) {
+        console.log(value);
         var keys = [];
         for (var key in value) {
             keys.push({ key: key, value: value[key] });
         }
-        console.log('key', keys);
+        console.log(keys);
         return keys;
     };
     KeysPipe = __decorate([

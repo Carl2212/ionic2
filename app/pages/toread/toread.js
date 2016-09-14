@@ -22,29 +22,38 @@ var detail_1 = require("../item-details/detail");
 var ToReadPage = (function () {
     function ToReadPage(navCtrl, navParams, commonfn, postrequest, config) {
         this.pagesize = 8;
+        this.selecteditem = false;
         this.navCtrl = navCtrl;
         this.storage = new index_1.Storage(index_1.SqlStorage);
         this.postrequest = postrequest;
         this.commonfn = commonfn;
         this.config = config;
-        this.listinfo = navParams.get('item');
         this.consttype = navParams.get('doctype');
-        if (!this.listinfo) {
-            var _this = this;
-            _this.commonfn.gotCount(_this.consttype, function (count, modulelist) {
-                _this.listinfo = modulelist;
-            });
-        }
         this.listpage = navParams.get('module_id');
         if (this.listpage) {
+            //二级列表页
             this.openlist(this.listpage, 1);
         }
+        else {
+            this.listinfo = navParams.get('item');
+            if (!this.listinfo) {
+                var _this = this;
+                _this.commonfn.gotCount(_this.consttype, function (count, modulelist) {
+                    _this.listinfo = modulelist;
+                });
+            }
+        }
     }
-    //点击进入列表页
-    ToReadPage.prototype.openlist = function (module_id, pageindex) {
+    //点击进入
+    ToReadPage.prototype.nextlist = function (module) {
+        this.navCtrl.push(ToReadPage, { module_id: module, doctype: this.consttype });
+    };
+    //进入列表页
+    ToReadPage.prototype.openlist = function (module, pageindex) {
+        if (!module)
+            return;
         if (!pageindex)
             pageindex = 1;
-        this.selecteditem = module_id;
         //读取存储数据
         var _this = this;
         _this.storage.getJson('userinfo').then(function (info) {
@@ -55,15 +64,15 @@ var ToReadPage = (function () {
                 { key: 'xmbm', value: _this.config.getValue('global_xmbm') },
                 { key: 'userid', value: info.userid },
                 { key: 'doctype', value: _this.consttype },
-                { key: 'moduleid', value: module_id },
+                { key: 'moduleid', value: module },
                 { key: 'pageindex', value: pageindex },
                 { key: 'pagesize', value: _this.pagesize }
             ];
             var doclisturl = _this.config.getValue('global_url') + _this.config.getValue('doclist_action');
             _this.postrequest.prequest(jsonParams, doclisturl, function (data) {
-                if (data.header.code == 1 && data.result.success == 1) {
+                if (data.header.code == 1 && data.result.success == 1 && isArray_1.isArray(data.result.doclist)) {
                     _this.doclist = _this.ParamsToJson(data.result.doclist);
-                    console.log(_this.doclist);
+                    _this.selecteditem = true;
                 }
             });
         });
@@ -90,6 +99,7 @@ var ToReadPage = (function () {
         return jdata;
     };
     ToReadPage.prototype.updo = function () {
+        console.log('backing');
         this.selecteditem = false;
     };
     ToReadPage.prototype.opendetail = function (detail) {

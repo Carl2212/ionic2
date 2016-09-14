@@ -4,13 +4,23 @@
       <ion-item-list *ngFor="let items of selectitems">
         <ion-list-header>
           <ion-label item-left small (click)="nextselectfn(items.groupid)">{{items.groupname}}</ion-label>
-          <ion-checkbox item-right dark [(ngModel)] ="nextcheckbox[items.groupid]" (ngModelChange)="selectall(items.groupid,$event)"></ion-checkbox>
+          <ion-checkbox *ngIf="multiuser != '0'" item-right dark [(ngModel)] ="nextcheckbox[items.groupid]" (ngModelChange)="selectall(items.groupid,$event)"></ion-checkbox>
         </ion-list-header>
         <div  *ngIf="nextselect && nextselect[items.groupid] && nextselect[items.groupid]['isopen']">
-          <ion-item *ngFor="let useritem of nextselect[items.groupid]">
-            <ion-label>{{useritem.username}}</ion-label>
-            <ion-checkbox dark [(ngModel)] = "selectusers[useritem.userid+'@'+useritem.username]"></ion-checkbox>
-          </ion-item>
+          <div [ngSwitch]="multiuser == '0'">
+            <ion-list *ngSwitchCase="true" radio-group [(ngModel)]="selectradio">
+              <ion-item *ngFor="let useritem of nextselect[items.groupid]">
+                <ion-label>{{useritem.username}}</ion-label>
+                <ion-radio item-left dark checked="{{selectusers && selectusers[useritem.userid+'@'+useritem.username] == true}}" value="{{useritem.userid+'@'+useritem.username}}"></ion-radio>
+              </ion-item>
+            </ion-list>
+            <ion-list *ngSwitchDefault>
+              <ion-item *ngFor="let useritem of nextselect[items.groupid]">
+                <ion-label>{{useritem.username}}</ion-label>
+                <ion-checkbox item-left dark  [(ngModel)] = "selectusers[useritem.userid+'@'+useritem.username]"></ion-checkbox>
+              </ion-item>
+            </ion-list>
+          </div>
         </div>
       </ion-item-list>
       <ion-item-list>

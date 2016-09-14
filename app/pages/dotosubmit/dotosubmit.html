@@ -15,7 +15,9 @@
   <!----------------------------------------------------------------------------------------------------------->
   <!---------------------------------------------- 操作项组件 --------------------------------------------------->
   <div *ngIf="nodelist">
-    <tosbread-com [node] = "node.value" (onToSbRead)="onToSbRead($event)" *ngFor="let node of nodelist | keys"></tosbread-com>
+    <div *ngFor="let node of nodelist | keys">
+    <tosbread-com [defaultuser] = "node.value.defaultuser" [departmentparam] = "node.value.departmentparam" [item] = "node.value.item" (onToSbRead)="onToSbRead($event)" ></tosbread-com>
+    </div>
   </div>
   <!----------------------------------------------------------------------------------------------------------->
   <!---------------------------------------------- 传阅组件 --------------------------------------------------->

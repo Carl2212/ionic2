@@ -26,11 +26,11 @@
     </ion-card-header>
     <ion-card-content *ngIf="isdetail">
       <ion-grid >
-        <ion-row *ngFor="let dl of detail">
-          <ion-col *ngIf="dl.formtype != 2">{{dl.label}}</ion-col>
+        <ion-row *ngFor="let dl of detail" >
+          <ion-col *ngIf="dl.formtype == 1">{{dl.label}}</ion-col>
           <ion-col>
-            <a ng-href="dl.text" *ngIf="dl.formtype == 2">{{dl.label}}</a>
-            <span *ngIf="dl.formtype != 2">{{dl.text}}</span>
+            <a ng-href="dl.text" *ngIf="dl.formtype != 1">{{dl.label}}</a>
+            <span *ngIf="dl.formtype == 1">{{dl.text}}</span>
           </ion-col>
         </ion-row>
       </ion-grid>

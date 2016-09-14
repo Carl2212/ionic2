@@ -17,10 +17,12 @@ import {ToReadPage} from "../toread/toread";
 import {OptionsComponent} from "../options/options";
 import {ToSbReadComponent} from "../tosbread/tosbread";
 import {Alert} from'ionic-angular'
+import {isObject} from "rxjs/util/isObject";
+import {CommonComponent} from "../common";
 
 @Component({
   templateUrl : 'build/pages/dotosubmit/dotosubmit.html',
-  providers : [ConfigComponent,PostRequest],
+  providers : [ConfigComponent,PostRequest,CommonComponent],
   directives : [OptionsComponent,ToSbReadComponent],
   pipes : [KeysPipe,KeyToParamsPipe,NullToFalse]
 })
@@ -37,14 +39,14 @@ export class DoToSubmitPage {
   private cdr : any;
   private navcontroller : any;
   private selectusers :any;
-
+  private commonfn : any;
   private nodelist : any;
   private umopinion : any;
 
   public issbread : boolean = false;
 
 
-  constructor(navParams:NavParams, navcontroller : NavController , postrequest:PostRequest, config:ConfigComponent , cdr: ChangeDetectorRef) {
+  constructor(navParams:NavParams, navcontroller : NavController , postrequest:PostRequest, config:ConfigComponent , cdr: ChangeDetectorRef , commonfn : CommonComponent) {
     this.pageparam = navParams.get('nextparam');
     this.detailinfo = navParams.get('detailinfo');
     console.log(this.pageparam,this.detailinfo);
@@ -53,6 +55,7 @@ export class DoToSubmitPage {
     this.postrequest = postrequest;
     this.config = config;
     this.cdr = cdr;
+    this.commonfn = commonfn;
     //请求接口获取当前模块操作项
     if(this.pageparam.doctype == 'todo') {
       this.nextroute();
@@ -84,7 +87,18 @@ export class DoToSubmitPage {
           _this.umopinion = data.result.nodelist.umopinion;
           _this.cdr.detectChanges();
           if(!isArray(_this.nodelist)) _this.nodelist = [_this.nodelist];
-          console.log('nodelist',_this.nodelist);
+          for(var temp in _this.nodelist) {
+            if(_this.nodelist[temp]['defaultuser']) {
+              _this.nodelist[temp]['defaultuser'] = _this.commonfn.ParamsToJson(_this.nodelist[temp]['defaultuser']);
+            }
+            if(_this.nodelist[temp]['departmentparam']) {
+              _this.nodelist[temp]['departmentparam'] = _this.commonfn.OneToJson(_this.nodelist[temp]['departmentparam']);
+            }
+            if(_this.nodelist[temp]['item']) {
+              _this.nodelist[temp]['item'] = _this.commonfn.OneToJson(_this.nodelist[temp]['item']);
+            }
+          }
+          console.log(_this.nodelist);
         }
       });
     });

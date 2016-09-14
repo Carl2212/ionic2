@@ -2,20 +2,41 @@
   <ion-list>
     <ion-item class="mg-item">
       <ion-row>
-        <ion-col class="cl"><a class="hello-a" href="javascript:void(0);" (click)="openPage(0)"> <img class="nav-icon" src="images/txl.png"><ion-title>通讯录</ion-title></a></ion-col>
-        <ion-col class="cl"><a class="hello-a" href="javascript:void(0);" (click)="openPage(1,toreadlist,'toread')"> <ion-badge class="ab-badge">{{toreadnum}}</ion-badge><img class="nav-icon" src="images/toread.png"><ion-title>待阅</ion-title></a></ion-col>
-        <ion-col class="cl"><a class="hello-a" href="javascript:void(0);" (click)="openPage(2)"> <img class="nav-icon" src="images/docsearch.png"><ion-title>查文</ion-title></a></ion-col>
+        <ion-col class="cl">
+          <a class="hello-a" href="javascript:void(0);" (click)="openPage(0)">
+            <img class="nav-icon" src="images/txl.png">
+            <strong>通讯录</strong>
+          </a>
+        </ion-col>
+        <ion-col class="cl">
+          <a class="hello-a" href="javascript:void(0);" (click)="openPage(1,toreadlist,'toread')">
+            <ion-badge class="ab-badge">{{toreadnum}}</ion-badge>
+            <img class="nav-icon" src="images/toread.png">
+            <strong>待阅</strong>
+          </a>
+        </ion-col>
+        <ion-col class="cl">
+          <a class="hello-a" href="javascript:void(0);" (click)="openPage(2)">
+            <img class="nav-icon" src="images/docsearch.png">
+            <strong>查文</strong>
+          </a>
+        </ion-col>
       </ion-row>
     </ion-item>
-    <a class="hello-a-full" href="javascript:void(0);" (click)="openPage(1,todolist,'todo')">
-      <ion-item class="mg-item">
-        <ion-icon name="list-box" item-left></ion-icon><ion-title>待办<ion-badge>{{todonum}}</ion-badge></ion-title><ion-icon name="more" item-right></ion-icon>
-      </ion-item>
+    <a ion-item class="mg-item" href="javascript:void(0);" (click)="openPage(1,todolist,'todo')">
+      <ion-icon name="list-box" item-left></ion-icon>
+      待办<ion-badge>{{todonum}}</ion-badge>
+      <ion-icon name="more" item-right></ion-icon>
     </a>
-    <a class="hello-a-full" href="javascript:void(0);" (click)="openPage(4)">
-      <ion-item class="mg-item">
-        <ion-icon name="list-box" item-left></ion-icon><ion-title>公告通知</ion-title><ion-icon name="more" item-right></ion-icon>
-      </ion-item>
+    <a ion-item class="mg-item" href="javascript:void(0);" (click)="openPage(4)">
+      <ion-icon name="list-box" item-left></ion-icon>
+      公告通知
+      <ion-icon name="more" item-right></ion-icon>
+    </a>
+    <a ion-item class="mg-item" href="javascript:void(0);" (click)="openPage(5)">
+      <ion-icon name="list-box" item-left></ion-icon>
+      测试cordova
+      <ion-icon name="more" item-right></ion-icon>
     </a>
   </ion-list>
 </ion-content>

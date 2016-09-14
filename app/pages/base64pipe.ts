@@ -39,11 +39,12 @@ export class NullToFalse implements PipeTransform {
 @Pipe({name: 'keys'})
 export class KeysPipe implements PipeTransform {
   transform(value : any, args:string[]) : any {
+    console.log(value);
     let keys = [];
     for (let key in value) {
       keys.push({key: key, value: value[key]});
     }
-    console.log('key',keys);
+    console.log(keys);
     return keys;
   }
 }

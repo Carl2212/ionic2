@@ -1,30 +1,26 @@
 <ion-header>
-  <ion-navbar class="header">
+  <ion-navbar>
     <button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title>待阅</ion-title>
-    <button class="ab-icon-circle" *ngIf="selecteditem" item-right (click)="updo()">
-      <ion-icon name="undo" item-left></ion-icon>
-    </button>
   </ion-navbar>
 </ion-header>
 <ion-content>
   <ion-list *ngIf="!selecteditem">
-    <button ion-item *ngFor="let item of listinfo" (click)="openlist(item.module_id)">
-      <p>{{item.module_name}}</p>
-      <div class="item-note" item-right>
-        <ion-badge>{{item.count}}</ion-badge>
-      </div>
+    <button ion-item *ngFor="let item of listinfo" (click)="nextlist(item.module_id)">
+      <p>{{item.module_name}}<ion-badge class="mg-l">{{item.count}}</ion-badge></p>
     </button>
   </ion-list>
   <ion-card *ngIf="selecteditem">
-    <ion-card-header>列表</ion-card-header>
+    <ion-card-header>列表
+    </ion-card-header>
+
     <ion-card-content>
       <ion-list>
         <a ion-item *ngFor="let doc of doclist" (click)="opendetail(doc)">
-          <p>{{doc.view.topic  | base64pipe }}</p>
-          <ion-note class="sm">{{doc.view.datetime}}</ion-note>
+          <p>{{doc?.view?.topic  | base64pipe }}</p>
+          <ion-note class="sm">{{doc?.view?.datetime}}</ion-note>
         </a>
       </ion-list>
     </ion-card-content>

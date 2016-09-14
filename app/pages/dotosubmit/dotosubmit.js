@@ -26,8 +26,9 @@ var toread_1 = require("../toread/toread");
 var options_1 = require("../options/options");
 var tosbread_1 = require("../tosbread/tosbread");
 var ionic_angular_2 = require('ionic-angular');
+var common_1 = require("../common");
 var DoToSubmitPage = (function () {
-    function DoToSubmitPage(navParams, navcontroller, postrequest, config, cdr) {
+    function DoToSubmitPage(navParams, navcontroller, postrequest, config, cdr, commonfn) {
         this.addressType = '0'; //'0' or 'C'
         this.sureselect = false;
         this.issbread = false;
@@ -39,6 +40,7 @@ var DoToSubmitPage = (function () {
         this.postrequest = postrequest;
         this.config = config;
         this.cdr = cdr;
+        this.commonfn = commonfn;
         //请求接口获取当前模块操作项
         if (this.pageparam.doctype == 'todo') {
             this.nextroute();
@@ -71,7 +73,18 @@ var DoToSubmitPage = (function () {
                     _this.cdr.detectChanges();
                     if (!isArray_1.isArray(_this.nodelist))
                         _this.nodelist = [_this.nodelist];
-                    console.log('nodelist', _this.nodelist);
+                    for (var temp in _this.nodelist) {
+                        if (_this.nodelist[temp]['defaultuser']) {
+                            _this.nodelist[temp]['defaultuser'] = _this.commonfn.ParamsToJson(_this.nodelist[temp]['defaultuser']);
+                        }
+                        if (_this.nodelist[temp]['departmentparam']) {
+                            _this.nodelist[temp]['departmentparam'] = _this.commonfn.OneToJson(_this.nodelist[temp]['departmentparam']);
+                        }
+                        if (_this.nodelist[temp]['item']) {
+                            _this.nodelist[temp]['item'] = _this.commonfn.OneToJson(_this.nodelist[temp]['item']);
+                        }
+                    }
+                    console.log(_this.nodelist);
                 }
             });
         });
@@ -132,11 +145,11 @@ var DoToSubmitPage = (function () {
     DoToSubmitPage = __decorate([
         core_1.Component({
             templateUrl: 'build/pages/dotosubmit/dotosubmit.html',
-            providers: [config_1.ConfigComponent, postrequest_1.PostRequest],
+            providers: [config_1.ConfigComponent, postrequest_1.PostRequest, common_1.CommonComponent],
             directives: [options_1.OptionsComponent, tosbread_1.ToSbReadComponent],
             pipes: [base64pipe_1.KeysPipe, base64pipe_1.KeyToParamsPipe, base64pipe_1.NullToFalse]
         }), 
-        __metadata('design:paramtypes', [ionic_angular_1.NavParams, ionic_angular_1.NavController, postrequest_1.PostRequest, config_1.ConfigComponent, core_1.ChangeDetectorRef])
+        __metadata('design:paramtypes', [ionic_angular_1.NavParams, ionic_angular_1.NavController, postrequest_1.PostRequest, config_1.ConfigComponent, core_1.ChangeDetectorRef, common_1.CommonComponent])
     ], DoToSubmitPage);
     return DoToSubmitPage;
 })();

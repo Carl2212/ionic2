@@ -12,13 +12,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
  */
 var core_1 = require('@angular/core');
 var common_1 = require("../common");
+var common_2 = require('@angular/common');
+var base64pipe_1 = require("../base64pipe");
 var SelectPage = (function () {
-    function SelectPage(commonfn) {
+    function SelectPage(commonfn, cdr) {
         this.addressType = '0'; //'0' or 'C'
         this.nextselect = [];
         this.nextcheckbox = [];
         this.onSelect = new core_1.EventEmitter();
         this.commonfn = commonfn;
+        this.cdr = cdr;
     }
     /*********************************************
      * 下一个选择框
@@ -27,6 +30,7 @@ var SelectPage = (function () {
      *         callback 回调
      *********************************************/
     SelectPage.prototype.nextselectfn = function (aa, istoggle, callback) {
+        this.cdr.detectChanges();
         if (!callback && istoggle) {
             callback = istoggle;
             istoggle = undefined;
@@ -34,8 +38,18 @@ var SelectPage = (function () {
         if (istoggle == undefined) {
             istoggle = true;
         }
+        var type;
+        var parent;
+        if (this.departmentparam) {
+            type = 4;
+            parent = this.departmentparam;
+        }
+        else {
+            type = 2;
+            parent = aa;
+        }
         var _this = this;
-        this.commonfn.getGroupOrUserList(2, aa, this.addressType, function (tmpdata) {
+        this.commonfn.getGroupOrUserList(type, parent, this.addressType, function (tmpdata) {
             if (_this.nextselect == undefined) {
                 var tmp = {};
                 tmp[aa] = tmpdata;
@@ -58,6 +72,10 @@ var SelectPage = (function () {
      * input : none
      *********************************************/
     SelectPage.prototype.sureselectfn = function () {
+        if (this.selectradio) {
+            this.selectusers[this.selectradio] = true;
+        }
+        console.log(this.selectusers);
         this.onSelect.emit(this.selectusers);
     };
     /*********************************************
@@ -100,6 +118,14 @@ var SelectPage = (function () {
         __metadata('design:type', Object)
     ], SelectPage.prototype, "selectitems", void 0);
     __decorate([
+        core_1.Input(), 
+        __metadata('design:type', Object)
+    ], SelectPage.prototype, "departmentparam", void 0);
+    __decorate([
+        core_1.Input(), 
+        __metadata('design:type', Object)
+    ], SelectPage.prototype, "multiuser", void 0);
+    __decorate([
         core_1.Output(), 
         __metadata('design:type', Object)
     ], SelectPage.prototype, "onSelect", void 0);
@@ -107,9 +133,11 @@ var SelectPage = (function () {
         core_1.Component({
             selector: 'my-select',
             templateUrl: 'build/pages/selectpage/selectpage.html',
-            inputs: ['selectitems', 'selectusers']
+            directives: [common_2.NgSwitch, common_2.NgSwitchCase, common_2.NgSwitchDefault],
+            pipes: [base64pipe_1.KeysPipe, base64pipe_1.KeyToParamsPipe, base64pipe_1.NullToFalse],
+            inputs: ['selectitems', 'selectusers', 'departmentparam', 'multiuser']
         }), 
-        __metadata('design:paramtypes', [common_1.CommonComponent])
+        __metadata('design:paramtypes', [common_1.CommonComponent, core_1.ChangeDetectorRef])
     ], SelectPage);
     return SelectPage;
 })();

@@ -7,11 +7,6 @@
     font-size : 1.8rem;
     font-weight : bold;
   }
-  .hello-a-full{
-    display: block;
-    text-decoration: none;
-    width: 100%;
-  }
   .hello-a {
     text-decoration: none;
     position: relative;
@@ -36,5 +31,33 @@
     .cl{
       text-align: center;
     }
+    .item-inner{
+      background-image: none !important;
+    }
   }
+  //[item-left], [item-right] {
+  //  margin: 9px 8px 9px 0;
+  //}
+  //[item-left] {
+  //  float : left;
+  //}
+  //[item-right] {
+  //  float : right;
+  //}
 }
+strong{
+  color : #000;
+}
+.fl-l{
+  float:left;
+}
+.fl-l + ion-title{
+  padding:0.2rem 0 ;
+}
+.mg-l{
+  margin-left:1rem;
+}
+
+
+
+

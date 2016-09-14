@@ -1,13 +1,17 @@
 /**
  * Created by Deng on 2016/8/11.
  */
-import {Component , Input , Output ,EventEmitter} from '@angular/core';
+import {Component , Input , Output ,EventEmitter , ChangeDetectorRef} from '@angular/core';
 import {CommonComponent} from "../common";
+import {NgSwitch ,NgSwitchCase , NgSwitchDefault } from '@angular/common';
+import {KeysPipe,KeyToParamsPipe,NullToFalse} from "../base64pipe";
 
 @Component({
   selector : 'my-select',
   templateUrl : 'build/pages/selectpage/selectpage.html',
-  inputs : ['selectitems','selectusers']
+  directives : [NgSwitch ,NgSwitchCase , NgSwitchDefault ],
+  pipes : [KeysPipe,KeyToParamsPipe,NullToFalse],
+  inputs : ['selectitems','selectusers','departmentparam','multiuser']
 })
 
 export class SelectPage {
@@ -15,11 +19,17 @@ export class SelectPage {
   private addressType:string = '0';//'0' or 'C'
   public nextselect:any =[];
   public nextcheckbox :any=[];
+  private selectradio : string;
+  private cdr : any;
   @Input() selectusers: any;
   @Input() selectitems : any;
+  @Input() departmentparam : any;
+  @Input() multiuser : any;
   @Output() onSelect = new EventEmitter<any>();
-  constructor(commonfn : CommonComponent) {
+
+  constructor(commonfn : CommonComponent ,cdr: ChangeDetectorRef) {
     this.commonfn = commonfn;
+    this.cdr = cdr;
   }
 
 
@@ -30,6 +40,7 @@ export class SelectPage {
    *         callback 回调
    *********************************************/
   nextselectfn(aa:string,istoggle : boolean,callback : any) {
+    this.cdr.detectChanges();
     if(!callback && istoggle) {
       callback = istoggle;
       istoggle = undefined;
@@ -37,8 +48,17 @@ export class SelectPage {
     if(istoggle == undefined) {
       istoggle = true;
     }
+    var type : number ;
+    var parent : any;
+    if(this.departmentparam) {
+      type = 4;
+      parent = this.departmentparam;
+    }else{
+      type = 2;
+      parent = aa;
+    }
     var _this = this;
-    this.commonfn.getGroupOrUserList(2, aa, this.addressType, function (tmpdata) {
+    this.commonfn.getGroupOrUserList(type, parent, this.addressType, function (tmpdata) {
       if (_this.nextselect == undefined) {
         var tmp = {};
         tmp[aa] = tmpdata;
@@ -59,6 +79,10 @@ export class SelectPage {
    * input : none
    *********************************************/
   sureselectfn() {
+    if(this.selectradio) {
+      this.selectusers[this.selectradio] = true;
+    }
+    console.log(this.selectusers);
     this.onSelect.emit(this.selectusers);
   }
 

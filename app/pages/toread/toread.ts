@@ -27,31 +27,40 @@ export class ToReadPage {
   private storage : any;
   private config : any;
   public doclist : any;
-  public selecteditem : any;
+  public selecteditem : boolean = false;
   private listpage : any;
+  private text : string;
   constructor(navCtrl : NavController , navParams : NavParams , commonfn : CommonComponent , postrequest : PostRequest , config : ConfigComponent) {
     this.navCtrl=navCtrl;
     this.storage = new Storage(SqlStorage);
     this.postrequest = postrequest;
     this.commonfn = commonfn;
     this.config = config;
-    this.listinfo = navParams.get('item');
+
     this.consttype = navParams.get('doctype');
-    if(!this.listinfo) {
-      let _this = this;
-      _this.commonfn.gotCount(_this.consttype,function(count,modulelist){
-        _this.listinfo = modulelist;
-      });
-    }
     this.listpage = navParams.get('module_id');
     if(this.listpage) {
+      //二级列表页
       this.openlist(this.listpage,1);
+    }else{
+      this.listinfo = navParams.get('item');
+      if(!this.listinfo) {
+        let _this = this;
+        _this.commonfn.gotCount(_this.consttype,function(count,modulelist){
+          _this.listinfo = modulelist;
+        });
+      }
     }
   }
-  //点击进入列表页
-  openlist(module_id,pageindex){
+  //点击进入
+  nextlist(module) {
+    this.navCtrl.push(ToReadPage,{module_id : module, doctype : this.consttype });
+  }
+  //进入列表页
+  openlist(module,pageindex){
+    if(!module) return;
     if(!pageindex) pageindex = 1;
-    this.selecteditem = module_id;
+
     //读取存储数据
     let _this = this;
     _this.storage.getJson('userinfo').then(function(info){
@@ -62,15 +71,15 @@ export class ToReadPage {
         {key : 'xmbm',value : _this.config.getValue('global_xmbm')},
         {key : 'userid' , value : info.userid},
         {key : 'doctype' , value : _this.consttype},
-        {key : 'moduleid' , value : module_id},
+        {key : 'moduleid' , value : module},
         {key : 'pageindex' , value : pageindex},
         {key : 'pagesize' , value : _this.pagesize}
       ];
       let doclisturl = _this.config.getValue('global_url') + _this.config.getValue('doclist_action');
       _this.postrequest.prequest(jsonParams,doclisturl,function(data){
-        if(data.header.code == 1 && data.result.success == 1) {
+        if(data.header.code == 1 && data.result.success == 1 && isArray(data.result.doclist)) {
           _this.doclist = _this.ParamsToJson(data.result.doclist);
-          console.log(_this.doclist);
+          _this.selecteditem = true;
         }
       });
     });
@@ -93,11 +102,10 @@ export class ToReadPage {
     return jdata;
   }
   updo() {
-      this.selecteditem = false;
+    console.log('backing');
+    this.selecteditem = false;
   }
   opendetail(detail) {
     this.navCtrl.push(DetailPage,{doc:detail,doctype : this.consttype});
   }
-
-
 }

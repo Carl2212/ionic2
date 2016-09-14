@@ -9,10 +9,8 @@
 <ion-content>
   <ion-list>
     <button ion-item *ngFor="let item of listinfo" (click)="openlist()">
-      <p>{{item.module_name}}</p>
-      <div class="item-note" item-right>
-        <ion-badge>{{item.count}}</ion-badge>
-      </div>
+      <ion-title item-left>{{item.module_name}}</ion-title>
+      <ion-badge item-right>{{item.count}}</ion-badge>
     </button>
   </ion-list>
 </ion-content>

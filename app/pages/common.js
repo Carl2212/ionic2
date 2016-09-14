@@ -38,15 +38,28 @@ var CommonComponent = (function () {
                 jsonParams.push({ key: 'parentid', value: parentid });
                 gotlisturl += _this.config.getValue('grouplist_action');
             }
-            else {
+            else if (type == 2) {
                 jsonParams.push({ key: 'groupid', value: parentid });
                 gotlisturl += _this.config.getValue('userlist_action');
+            }
+            else if (type == 3) {
+                jsonParams.push({ key: 'moduleid', value: parentid.moduleid });
+                jsonParams.push({ key: 'docid', value: parentid.docid });
+                jsonParams.push({ key: 'nextnodeid', value: parentid.nextnodeid });
+                gotlisturl += _this.config.getValue('nextroute_group_action');
+            }
+            else if (type == 4) {
+                jsonParams.push({ key: 'moduleid', value: parentid.moduleid });
+                jsonParams.push({ key: 'docid', value: parentid.docid });
+                jsonParams.push({ key: 'nextnodeid', value: parentid.nextnodeid });
+                jsonParams.push({ key: 'groupid', value: 'Role' });
+                gotlisturl += _this.config.getValue('nextroute_user_action');
             }
             //请求
             _this.postrequest.prequest(jsonParams, gotlisturl, function (data) {
                 //回调
                 if (data.header.code == 1 && data.result.success == 1) {
-                    if (type == 1) {
+                    if (type == 1 || type == 3) {
                         callback(data.result.grouplist);
                     }
                     else {
@@ -56,20 +69,29 @@ var CommonComponent = (function () {
             });
         });
     };
-    CommonComponent.prototype.ParamsToJson = function (params) {
-        if (!params || (isArray_1.isArray(params) && params.length <= 0))
+    CommonComponent.prototype.ParamsToJson = function (params, k, v) {
+        if (k === void 0) { k = "name"; }
+        if (v === void 0) { v = "text"; }
+        if (!params || !isArray_1.isArray(params) || params.length <= 0)
             return [];
         var jdata = [];
         for (var _i = 0; _i < params.length; _i++) {
             var param = params[_i];
-            var tmp = {};
-            for (var _a = 0; _a < param.length; _a++) {
-                var item = param[_a];
-                tmp[item.name] = item.text;
-            }
-            jdata.push(tmp);
+            jdata.push(this.OneToJson(param, k, v));
         }
         return jdata;
+    };
+    CommonComponent.prototype.OneToJson = function (param, k, v) {
+        if (k === void 0) { k = "name"; }
+        if (v === void 0) { v = "text"; }
+        if (!param || !isArray_1.isArray(param) || param.length <= 0)
+            return [];
+        var tmp = [];
+        for (var _i = 0; _i < param.length; _i++) {
+            var item = param[_i];
+            tmp[item[k]] = item[v];
+        }
+        return tmp;
     };
     //通用方法之列项数量的获取
     CommonComponent.prototype.gotCount = function (doctype, callback) {
@@ -97,6 +119,12 @@ var CommonComponent = (function () {
                 }
             });
         });
+    };
+    CommonComponent.prototype.isEmptyObject = function (obj) {
+        for (var i in obj) {
+            return false;
+        }
+        return true;
     };
     CommonComponent = __decorate([
         core_1.Injectable(), 

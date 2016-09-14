@@ -7,6 +7,7 @@ import {NoticeListPage} from './pages/notice/noticelist';
 import {DocSearchPage} from './pages/docsearch/docsearch';
 import {ToDoPage} from './pages/todo/todo';
 import {ToReadPage} from './pages/toread/toread';
+import {CordovaPage} from './pages/cordova/cordova';
 
 
 @Component({
@@ -32,6 +33,7 @@ class MyApp {
       { title:'查文', component : DocSearchPage ,params : {}},
       { title:'待办', component : ToReadPage,params :{doctype : 'todo'}},
       { title:'公告通知', component : NoticeListPage ,params :{}},
+      { title:'测试cordova', component : CordovaPage ,params :{}},
     ];
   }
 

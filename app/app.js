@@ -15,6 +15,7 @@ var txl_1 = require('./pages/txl/txl');
 var noticelist_1 = require('./pages/notice/noticelist');
 var docsearch_1 = require('./pages/docsearch/docsearch');
 var toread_1 = require('./pages/toread/toread');
+var cordova_1 = require('./pages/cordova/cordova');
 var MyApp = (function () {
     function MyApp(platform, menu) {
         this.platform = platform;
@@ -30,6 +31,7 @@ var MyApp = (function () {
             { title: '查文', component: docsearch_1.DocSearchPage, params: {} },
             { title: '待办', component: toread_1.ToReadPage, params: { doctype: 'todo' } },
             { title: '公告通知', component: noticelist_1.NoticeListPage, params: {} },
+            { title: '测试cordova', component: cordova_1.CordovaPage, params: {} },
         ];
     }
     MyApp.prototype.initializeApp = function () {

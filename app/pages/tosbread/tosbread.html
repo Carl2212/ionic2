@@ -1,10 +1,16 @@
 <ion-card>
   <ion-card-header>
-    <ion-item>
-      <ion-label item-left></ion-label>
-      <ion-checkbox primary large item-right (click)="selectitemsfn()" *ngIf="isnull" [(ngModel)] ="toreadcheckbox"></ion-checkbox>
-      <a item-right (click)="selectitemsfn()" *ngIf="selectitems && !isnull"><ion-icon name="reorder"></ion-icon></a>
-    </ion-item>
+      <div [ngSwitch]="item?.multiuser">
+        <ion-item *ngSwitchCase="'0'">
+          <ion-label>{{item?.nodename ? item?.nodename : "传阅"}}</ion-label>
+          <ion-radio  primary large item-right (click)="selectitemsfn()" checked="{{!isnull}}"></ion-radio>
+        </ion-item>
+        <ion-item *ngSwitchDefault>
+          <ion-label>{{item?.nodename ? item?.nodename : "传阅"}}</ion-label>
+          <ion-checkbox primary large item-right (click)="selectitemsfn()" *ngIf="isnull" [(ngModel)] ="toreadcheckbox"></ion-checkbox>
+          <a item-right (click)="selectitemsfn()" *ngIf="selectitems && !isnull"><ion-icon name="reorder" ></ion-icon></a>
+        </ion-item>
+      </div>
   </ion-card-header>
   <ion-card-content *ngIf="!openitems">
       <span *ngFor="let sel of selectusers | keys">
@@ -13,8 +19,9 @@
           <ion-icon name="close" item-right></ion-icon>
         </button>
       </span>
+
   </ion-card-content>
 </ion-card>
 <!----------------------------------------------组件选择器--------------------------------------------------->
-<my-select [selectitems] = "selectitems"  [selectusers] = "selectusers" *ngIf="openitems" (onSelect) = "onSelect($event)"></my-select>
+<my-select [selectitems] = "selectitems" [multiuser] = "item?.multiuser" [departmentparam] ="departmentparam"  [selectusers] = "selectusers" *ngIf="openitems" (onSelect) = "onSelect($event)"></my-select>
 <!----------------------------------------------------------------------------------------------------------->

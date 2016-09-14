@@ -3,8 +3,8 @@ var gulp = require('gulp'),
     del = require('del'),
     runSequence = require('run-sequence'),
     argv = process.argv;
-
-
+//var karma = require('karma').server;
+//var typescript = require('gulp-tsc');
 /**
  * Ionic hooks
  * Add ':before' or ':after' to any Ionic project command name to run the specified
@@ -63,7 +63,21 @@ gulp.task('build', ['clean'], function(done){
     }
   );
 });
-
+//gulp.task('compile', function () {
+//
+//  return gulp.src(['test/**/*.ts',])
+//
+//    .pipe(typescript({
+//
+//      target: 'es5',//把typescript转换成es5标准的js文件,也可以是es6,但这个node版本不支持
+//
+//      module: 'commonjs',//模块使用nodejs的标准
+//
+//    }))
+//
+//    .pipe(gulp.dest('./es5/'))
+//
+//});
 gulp.task('sass', buildSass);
 gulp.task('html', copyHTML);
 gulp.task('fonts', copyFonts);
@@ -72,3 +86,15 @@ gulp.task('clean', function(){
   return del('www/build');
 });
 gulp.task('lint', tslint);
+
+/**
+* Test task, run test once and exit
+*/
+//gulp.task('test', function(done) {
+//    karma.start({
+//        configFile: __dirname + '/test/my.conf.js',
+//        singleRun: true
+//    }, function() {
+//        done();
+//    });
+//});

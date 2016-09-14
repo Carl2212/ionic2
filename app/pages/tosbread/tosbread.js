@@ -11,22 +11,29 @@ var __metadata = (this && this.__metadata) || function (k, v) {
  * Created by Deng on 2016/8/10.
  */
 var core_1 = require('@angular/core');
+var common_1 = require('@angular/common');
 var selectpage_1 = require("../selectpage/selectpage");
 var base64pipe_1 = require("../base64pipe");
-var common_1 = require("../common");
+var common_2 = require("../common");
 var ToSbReadComponent = (function () {
     function ToSbReadComponent(commonfn, cdr) {
         this.isnull = true;
+        this.toreadcheckbox = false;
+        this.openitems = false;
         this.nextcheckbox = [];
         this.addressType = '0'; //'0' or 'C'
-        this.selectusers = [];
+        this.selectusers = {};
         this.onToSbRead = new core_1.EventEmitter();
         this.commonfn = commonfn;
         this.cdr = cdr;
-        console.log(this.node);
     }
     ToSbReadComponent.prototype.onSelect = function (event) {
         this.selectusers = event;
+        console.log(this.selectusers);
+        if (!this.selectusers || this.commonfn.isEmptyObject(this.selectusers)) {
+            this.isnull = true;
+            console.log(this.isnull);
+        }
         this.openitems = false;
         this.selusers();
         this.onToSbRead.emit(event);
@@ -36,14 +43,39 @@ var ToSbReadComponent = (function () {
      * input : none
      *********************************************/
     ToSbReadComponent.prototype.selectitemsfn = function () {
+        if (this.item && (this.item.ispointtoend == 'S' || this.item.ispointtoend == 'Y')) {
+            //最后一步
+            return;
+        }
+        else if (this.defaultuser) {
+            var tmp = {};
+            for (var _i = 0, _a = this.defaultuser; _i < _a.length; _i++) {
+                var duser = _a[_i];
+                tmp[duser.userid + '@' + duser.username] = true;
+            }
+            this.selectusers = tmp;
+            this.isnull = false;
+            this.cdr.detectChanges();
+            return;
+        }
         var _this = this;
-        this.commonfn.getGroupOrUserList(1, 0, this.addressType, function (data) {
+        var type;
+        var parent;
+        if (!_this.item) {
+            type = 1;
+            parent = 0;
+        }
+        else if (_this.item.isdefaultroute) {
+            type = 3;
+            parent = _this.departmentparam;
+        }
+        this.commonfn.getGroupOrUserList(type, parent, this.addressType, function (data) {
             _this.selectitems = data;
             _this.openitems = true;
         });
-        if (!this.toreadcheckbox) {
+        if (this.item && this.item.multiuser != 0 && !this.toreadcheckbox) {
             this.nextcheckbox = [];
-            this.selectusers = [];
+            this.selectusers = {};
             this.isnull = true;
         }
     };
@@ -60,10 +92,13 @@ var ToSbReadComponent = (function () {
         }
         if (close) {
             this.nextcheckbox = [];
-            this.selectusers = [];
+            this.selectusers = {};
             this.isnull = true;
             this.toreadcheckbox = false;
+            this.cdr.detectChanges();
+            console.log('isnull', this.isnull);
         }
+        console.log('notnull');
     };
     /*********************************************
      * 监控变量selectusers改变时，判断selectusers是否为空是否都为false
@@ -99,7 +134,15 @@ var ToSbReadComponent = (function () {
     __decorate([
         core_1.Input(), 
         __metadata('design:type', Object)
-    ], ToSbReadComponent.prototype, "node", void 0);
+    ], ToSbReadComponent.prototype, "defaultuser", void 0);
+    __decorate([
+        core_1.Input(), 
+        __metadata('design:type', Object)
+    ], ToSbReadComponent.prototype, "departmentparam", void 0);
+    __decorate([
+        core_1.Input(), 
+        __metadata('design:type', Object)
+    ], ToSbReadComponent.prototype, "item", void 0);
     __decorate([
         core_1.Output(), 
         __metadata('design:type', Object)
@@ -108,11 +151,12 @@ var ToSbReadComponent = (function () {
         core_1.Component({
             selector: 'tosbread-com',
             templateUrl: 'build/pages/tosbread/tosbread.html',
-            directives: [selectpage_1.SelectPage],
-            providers: [common_1.CommonComponent],
-            pipes: [base64pipe_1.KeysPipe, base64pipe_1.KeyToParamsPipe, base64pipe_1.NullToFalse]
+            directives: [selectpage_1.SelectPage, common_1.NgSwitch, common_1.NgSwitchCase, common_1.NgSwitchDefault],
+            providers: [common_2.CommonComponent],
+            pipes: [base64pipe_1.KeysPipe, base64pipe_1.KeyToParamsPipe, base64pipe_1.NullToFalse],
+            inputs: ['defaultuser', 'departmentparam', 'item'],
         }), 
-        __metadata('design:paramtypes', [common_1.CommonComponent, core_1.ChangeDetectorRef])
+        __metadata('design:paramtypes', [common_2.CommonComponent, core_1.ChangeDetectorRef])
     ], ToSbReadComponent);
     return ToSbReadComponent;
 })();
