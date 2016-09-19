@@ -34,7 +34,6 @@ export class DetailPage {
   constructor(navParams : NavParams , navcontrol : NavController , commonfn : CommonComponent , postrequest : PostRequest , config : ConfigComponent) {
     this.detailinfo = navParams.get('doc');
     this.consttype = navParams.get('doctype');
-    console.log(this.consttype);
     this.simpleinfo = this.detailinfo.view;
     this.commonfn = commonfn;
     this.postrequest = postrequest;

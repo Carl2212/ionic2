@@ -25,7 +25,6 @@ var DetailPage = (function () {
         this.isprocess = false;
         this.detailinfo = navParams.get('doc');
         this.consttype = navParams.get('doctype');
-        console.log(this.consttype);
         this.simpleinfo = this.detailinfo.view;
         this.commonfn = commonfn;
         this.postrequest = postrequest;

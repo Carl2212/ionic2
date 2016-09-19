@@ -9,21 +9,26 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var ionic_angular_1 = require('ionic-angular');
-var postrequest_1 = require('../../pages/postrequest');
-var txl_1 = require('../../pages/txl/txl');
-var noticelist_1 = require('../../pages/notice/noticelist');
-var docsearch_1 = require('../../pages/docsearch/docsearch');
-var todo_1 = require('../../pages/todo/todo');
-var cordova_1 = require('../../pages/cordova/cordova');
-var toread_1 = require('../../pages/toread/toread');
+var postrequest_1 = require('../postrequest');
+var txl_1 = require('../txl/txl');
+var noticelist_1 = require('../notice/noticelist');
+var docsearch_1 = require('../docsearch/docsearch');
+var todo_1 = require('../todo/todo');
+var cordova_1 = require('../cordova/cordova');
+var toread_1 = require('../toread/toread');
 var config_1 = require('../config');
 var index_1 = require("ionic-angular/index");
 var common_1 = require("../common");
+var login_1 = require("../login/login");
 var HelloIonicPage = (function () {
     function HelloIonicPage(nav, config, postrequest, commonfn) {
         this.todonum = 0;
         this.toreadnum = 0;
         this.nav = nav;
+        //let alert = Alert.create({subTitle : '传阅失败~请重试',buttons :['ok']});
+        //this.nav.present(alert);
+        //let modal = Modal.create(Loading);
+        //this.nav.present(modal);
         this.config = config;
         this.pages = [
             { title: 'TxlPage', component: txl_1.TxlPage },
@@ -41,18 +46,23 @@ var HelloIonicPage = (function () {
     //页面加载初始化
     HelloIonicPage.prototype.Initpage = function () {
         var _this = this;
-        _this.getUserInfo(function () {
-            _this.isLogin(function () {
-                //获取各列表项的值
+        _this.getUserInfo(function (notlogin) {
+            if (notlogin) {
                 _this.gotTodoCount();
                 _this.gotToreadCount();
-            });
+            }
+            else {
+                _this.isLogin(function () {
+                    //获取各列表项的值
+                    _this.gotTodoCount();
+                    _this.gotToreadCount();
+                });
+            }
         });
     };
     //初始化内容存储类
     HelloIonicPage.prototype.saveUser = function () {
         this.storage.setJson('userinfo', { username: this.username, userid: this.userid, cnname: this.cnname, isLeader: this.isLeader });
-        console.log(this.storage.getJson('userinfo'));
     };
     //获取用户信息
     HelloIonicPage.prototype.getUserInfo = function (callback) {
@@ -70,19 +80,32 @@ var HelloIonicPage = (function () {
         }
         else {
             this.username = this.getURLParam('username');
+            var userinfo = this.storage.getJson('userinfo');
             if (this.username) {
                 callback && callback();
             }
             else {
-                this.username = "yujx",
-                    callback && callback();
+                //跳转到登录页面
+                var modal = ionic_angular_1.Modal.create(login_1.LoginPage);
+                var _me = this;
+                modal.onDismiss(function (data) {
+                    console.log('data', data);
+                    if (data.isneedwxlogin) {
+                        _me.username = data.username;
+                        callback && callback();
+                    }
+                    else {
+                        _me.storage.setJson('userinfo', { username: data.username, userid: data.userid, cnname: data.cnname, isLeader: data.isLeader });
+                        callback && callback(true);
+                    }
+                });
+                this.nav.present(modal);
             }
         }
     };
     //判断登录
     HelloIonicPage.prototype.isLogin = function (callback) {
         var userinfourl = this.config.getValue('global_url') + this.config.getValue('login_action');
-        console.log('username', this.username);
         var jsonParams = [
             { key: 'username', value: this.username },
             { key: 'qybm', value: this.config.getValue('global_qybm') },
@@ -125,12 +148,10 @@ var HelloIonicPage = (function () {
         });
     };
     HelloIonicPage.prototype.openPage = function (p, item, doctype) {
-        console.log(p, this.pages[p]);
         if (item) {
             this.nav.setRoot(this.pages[p].component, { item: item, doctype: doctype });
         }
         else {
-            console.log(p, this.pages[p]);
             this.nav.setRoot(this.pages[p].component);
         }
     };

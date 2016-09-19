@@ -18,7 +18,6 @@ export class KeyToParamsPipe implements PipeTransform {
 @Pipe({name : 'nulltofalse'})
 export class NullToFalse implements PipeTransform {
   transform(value) : any {
-    console.log(typeof value);
     if(!value || this.isEmptyObject(value)) {
       return false
     }
@@ -39,12 +38,10 @@ export class NullToFalse implements PipeTransform {
 @Pipe({name: 'keys'})
 export class KeysPipe implements PipeTransform {
   transform(value : any, args:string[]) : any {
-    console.log(value);
     let keys = [];
     for (let key in value) {
       keys.push({key: key, value: value[key]});
     }
-    console.log(keys);
     return keys;
   }
 }

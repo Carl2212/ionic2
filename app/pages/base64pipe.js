@@ -33,7 +33,6 @@ var NullToFalse = (function () {
     function NullToFalse() {
     }
     NullToFalse.prototype.transform = function (value) {
-        console.log(typeof value);
         if (!value || this.isEmptyObject(value)) {
             return false;
         }
@@ -57,12 +56,10 @@ var KeysPipe = (function () {
     function KeysPipe() {
     }
     KeysPipe.prototype.transform = function (value, args) {
-        console.log(value);
         var keys = [];
         for (var key in value) {
             keys.push({ key: key, value: value[key] });
         }
-        console.log(keys);
         return keys;
     };
     KeysPipe = __decorate([

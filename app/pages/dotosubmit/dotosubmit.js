@@ -34,7 +34,6 @@ var DoToSubmitPage = (function () {
         this.issbread = false;
         this.pageparam = navParams.get('nextparam');
         this.detailinfo = navParams.get('detailinfo');
-        console.log(this.pageparam, this.detailinfo);
         this.navcontroller = navcontroller;
         this.storage = new index_1.Storage(index_1.SqlStorage);
         this.postrequest = postrequest;
@@ -84,7 +83,6 @@ var DoToSubmitPage = (function () {
                             _this.nodelist[temp]['item'] = _this.commonfn.OneToJson(_this.nodelist[temp]['item']);
                         }
                     }
-                    console.log(_this.nodelist);
                 }
             });
         });

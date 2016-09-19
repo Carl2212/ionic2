@@ -102,7 +102,6 @@ export class ToReadPage {
     return jdata;
   }
   updo() {
-    console.log('backing');
     this.selecteditem = false;
   }
   opendetail(detail) {

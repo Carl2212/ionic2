@@ -29,10 +29,8 @@ var ToSbReadComponent = (function () {
     }
     ToSbReadComponent.prototype.onSelect = function (event) {
         this.selectusers = event;
-        console.log(this.selectusers);
         if (!this.selectusers || this.commonfn.isEmptyObject(this.selectusers)) {
             this.isnull = true;
-            console.log(this.isnull);
         }
         this.openitems = false;
         this.selusers();
@@ -96,9 +94,7 @@ var ToSbReadComponent = (function () {
             this.isnull = true;
             this.toreadcheckbox = false;
             this.cdr.detectChanges();
-            console.log('isnull', this.isnull);
         }
-        console.log('notnull');
     };
     /*********************************************
      * 监控变量selectusers改变时，判断selectusers是否为空是否都为false

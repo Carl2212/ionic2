@@ -99,7 +99,6 @@ var ToReadPage = (function () {
         return jdata;
     };
     ToReadPage.prototype.updo = function () {
-        console.log('backing');
         this.selecteditem = false;
     };
     ToReadPage.prototype.opendetail = function (detail) {

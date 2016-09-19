@@ -3,7 +3,7 @@
     <ion-card>
       <ion-item-list *ngFor="let items of selectitems">
         <ion-list-header>
-          <ion-label item-left small (click)="nextselectfn(items.groupid)">{{items.groupname}}</ion-label>
+          <ion-label item-left small (click)="nextselectfn(items)">{{items.groupname}}</ion-label>
           <ion-checkbox *ngIf="multiuser != '0'" item-right dark [(ngModel)] ="nextcheckbox[items.groupid]" (ngModelChange)="selectall(items.groupid,$event)"></ion-checkbox>
         </ion-list-header>
         <div  *ngIf="nextselect && nextselect[items.groupid] && nextselect[items.groupid]['isopen']">

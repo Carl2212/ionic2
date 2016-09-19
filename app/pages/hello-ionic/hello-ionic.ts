@@ -1,16 +1,20 @@
 import {Component} from '@angular/core';
-import {ionicBootstrap, Platform, MenuController, NavController} from 'ionic-angular';
-import {PostRequest} from '../../pages/postrequest';
-import {ParamsJson} from '../../pages/paramsjson';
-import {TxlPage} from '../../pages/txl/txl';
-import {NoticeListPage} from '../../pages/notice/noticelist';
-import {DocSearchPage} from '../../pages/docsearch/docsearch';
-import {ToDoPage} from '../../pages/todo/todo';
-import {CordovaPage} from '../../pages/cordova/cordova';
-import {ToReadPage} from '../../pages/toread/toread';
+import {ionicBootstrap, Platform, MenuController, NavController ,Modal} from 'ionic-angular';
+import {PostRequest} from '../postrequest';
+import {ParamsJson} from '../paramsjson';
+import {TxlPage} from '../txl/txl';
+import {NoticeListPage} from '../notice/noticelist';
+import {DocSearchPage} from '../docsearch/docsearch';
+import {ToDoPage} from '../todo/todo';
+import {CordovaPage} from '../cordova/cordova';
+import {ToReadPage} from '../toread/toread';
 import {ConfigComponent} from '../config';
 import {Storage, SqlStorage} from "ionic-angular/index";
 import {CommonComponent} from "../common";
+import {Loading} from "../loading/loading";
+import {Alert} from'ionic-angular'
+import {ModalCmp} from "ionic-angular/components/modal/modal";
+import {LoginPage} from "../login/login";
 
 @Component({
   templateUrl: 'build/pages/hello-ionic/hello-ionic.html',
@@ -35,6 +39,11 @@ export class HelloIonicPage {
   private commonfn;
   constructor(nav : NavController,config : ConfigComponent,postrequest : PostRequest ,commonfn : CommonComponent) {
     this.nav = nav;
+    //let alert = Alert.create({subTitle : '传阅失败~请重试',buttons :['ok']});
+    //this.nav.present(alert);
+    //let modal = Modal.create(Loading);
+    //this.nav.present(modal);
+
     this.config = config;
     this.pages = [
       { title: 'TxlPage', component: TxlPage },
@@ -52,19 +61,22 @@ export class HelloIonicPage {
   //页面加载初始化
   Initpage() {
     var _this = this;
-    _this.getUserInfo(function(){
-      _this.isLogin(function(){
-        //获取各列表项的值
+    _this.getUserInfo(function(notlogin){
+      if(notlogin) {
         _this.gotTodoCount();
         _this.gotToreadCount();
-
-      });
+      }else{
+        _this.isLogin(function(){
+          //获取各列表项的值
+          _this.gotTodoCount();
+          _this.gotToreadCount();
+        });
+      }
     });
   }
   //初始化内容存储类
   saveUser() {
     this.storage.setJson('userinfo',{username : this.username,userid: this.userid,cnname :this.cnname,isLeader: this.isLeader});
-    console.log(this.storage.getJson('userinfo'));
   }
   //获取用户信息
   getUserInfo(callback) {
@@ -78,21 +90,39 @@ export class HelloIonicPage {
     ];
     if(this.config.getValue('author_check')) {
       this.postrequest.prequest(jsonParams,userinfourl);
-      callback && callback();
+        callback && callback();
     }else{
       this.username = this.getURLParam('username');
-      if(this.username) {
+      let userinfo = this.storage.getJson('userinfo');
+      if(this.username) {//微信 ，网页端携带参数进入
         callback && callback();
+      //}else if(userinfo){
+      //  this.username = userinfo.username;
+      //  this.userid = userinfo.userid;
+      //  this.cnname = userinfo.cnname;
+      //  this.isLeader =userinfo.isLeader;
+      //  callback && callback(true);
       }else{
-        this.username="yujx",
-        callback && callback();
+        //跳转到登录页面
+        let modal = Modal.create(LoginPage);
+        var _me = this;
+        modal.onDismiss(data => {
+          console.log('data',data);
+          if(data.isneedwxlogin) {//用于login接口不能调通时测试使用。
+            _me.username = data.username;
+            callback && callback();
+          }else{
+            _me.storage.setJson('userinfo',{username : data.username,userid: data.userid,cnname :data.cnname,isLeader: data.isLeader});
+            callback && callback(true);
+          }
+        });
+        this.nav.present(modal);
       }
     }
   }
   //判断登录
   isLogin(callback) {
     var userinfourl = this.config.getValue('global_url')+this.config.getValue('login_action');
-    console.log('username' , this.username);
     var jsonParams = [
       {key : 'username',value : this.username},
       {key : 'qybm',value : this.config.getValue('global_qybm')},
@@ -139,11 +169,9 @@ export class HelloIonicPage {
 
 
   openPage(p,item,doctype){
-      console.log(p,this.pages[p]);
       if(item) {
         this.nav.setRoot(this.pages[p].component,{item : item , doctype : doctype});
       }else{
-        console.log(p,this.pages[p]);
         this.nav.setRoot(this.pages[p].component);
       }
   }

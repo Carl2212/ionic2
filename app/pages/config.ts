@@ -10,6 +10,7 @@ export class ConfigComponent {
     global_url: 'http://14.146.228.41:61002/ms',
     current_user_action: '/wx/user',
     login_action: '/wap/execute?cmd=wxlogin&command=wxlogin',
+    login_khd_action: '/wap/execute?cmd=login&command=login',
     modulelist_action: '/wap/execute?cmd=modulelist&command=modulelist',
 
     //文档列表页获取，详情获取

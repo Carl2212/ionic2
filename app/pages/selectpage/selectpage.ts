@@ -31,16 +31,30 @@ export class SelectPage {
     this.commonfn = commonfn;
     this.cdr = cdr;
   }
+  //生命周期钩子 初始化
+  ngOnInit() {
 
-
+  }
   /*********************************************
    * 下一个选择框
-   * input : aa userid
+   * input : aa object || string
    *         istoggle 是否切换
    *         callback 回调
    *********************************************/
-  nextselectfn(aa:string,istoggle : boolean,callback : any) {
+  nextselectfn(aa:any,istoggle : boolean,callback : any) {
+    //aa 可能是选择的父选项对象 也可能只是选择的父选项对象的groupid
+    let selectitem = aa;
     this.cdr.detectChanges();
+    //aa 是对象 并且有子项childlist 说明有子目录 进入子目录选项
+    if(aa instanceof Object) {
+      if(aa.childlist != undefined) {
+        this.selectitems = aa.childlist;
+        return;
+      }
+      //兼容最初版本aa 只是groupid
+      aa = aa.groupid;
+    }
+
     if(!callback && istoggle) {
       callback = istoggle;
       istoggle = undefined;
@@ -50,7 +64,7 @@ export class SelectPage {
     }
     var type : number ;
     var parent : any;
-    if(this.departmentparam) {
+    if(this.departmentparam && this.commonfn.isEmptyObject(selectitem.parentid)) {
       type = 4;
       parent = this.departmentparam;
     }else{
@@ -66,6 +80,7 @@ export class SelectPage {
       } else if (!_this.nextselect[aa]) {
         _this.nextselect[aa] = tmpdata;
       }
+
       if(istoggle) {
         _this.nextselect[aa]['isopen'] = !_this.nextselect[aa]['isopen'];
       }else{
@@ -80,9 +95,9 @@ export class SelectPage {
    *********************************************/
   sureselectfn() {
     if(this.selectradio) {
+      this.selectusers = [];
       this.selectusers[this.selectradio] = true;
     }
-    console.log(this.selectusers);
     this.onSelect.emit(this.selectusers);
   }
 

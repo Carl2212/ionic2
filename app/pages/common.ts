@@ -103,7 +103,7 @@ export class CommonComponent {
           }
           callback && callback(total_count, modulelist);
         }
-      });
+      },false);
     });
   }
   isEmptyObject(obj) {

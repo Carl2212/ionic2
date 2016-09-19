@@ -117,7 +117,7 @@ var CommonComponent = (function () {
                     }
                     callback && callback(total_count, modulelist);
                 }
-            });
+            }, false);
         });
     };
     CommonComponent.prototype.isEmptyObject = function (obj) {

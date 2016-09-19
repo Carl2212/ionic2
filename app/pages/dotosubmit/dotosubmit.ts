@@ -49,7 +49,6 @@ export class DoToSubmitPage {
   constructor(navParams:NavParams, navcontroller : NavController , postrequest:PostRequest, config:ConfigComponent , cdr: ChangeDetectorRef , commonfn : CommonComponent) {
     this.pageparam = navParams.get('nextparam');
     this.detailinfo = navParams.get('detailinfo');
-    console.log(this.pageparam,this.detailinfo);
     this.navcontroller = navcontroller;
     this.storage = new Storage(SqlStorage);
     this.postrequest = postrequest;
@@ -98,7 +97,6 @@ export class DoToSubmitPage {
               _this.nodelist[temp]['item'] = _this.commonfn.OneToJson(_this.nodelist[temp]['item']);
             }
           }
-          console.log(_this.nodelist);
         }
       });
     });
