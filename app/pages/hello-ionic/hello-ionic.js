@@ -80,26 +80,29 @@ var HelloIonicPage = (function () {
         }
         else {
             this.username = this.getURLParam('username');
-            var userinfo = this.storage.getJson('userinfo');
             if (this.username) {
                 callback && callback();
             }
             else {
-                //跳转到登录页面
-                var modal = ionic_angular_1.Modal.create(login_1.LoginPage);
                 var _me = this;
-                modal.onDismiss(function (data) {
-                    console.log('data', data);
-                    if (data.isneedwxlogin) {
-                        _me.username = data.username;
-                        callback && callback();
+                this.storage.get('userinfo').then(function (userinfo) {
+                    if (userinfo && userinfo.username) {
+                        _me.username = userinfo.username;
+                        _me.userid = userinfo.userid;
+                        _me.cnname = userinfo.cnname;
+                        _me.isLeader = userinfo.isLeader;
+                        if (_me.username && !_me.userid) {
+                            callback && callback();
+                        }
+                        else {
+                            callback && callback(true);
+                        }
                     }
                     else {
-                        _me.storage.setJson('userinfo', { username: data.username, userid: data.userid, cnname: data.cnname, isLeader: data.isLeader });
-                        callback && callback(true);
+                        //跳转到登录页面
+                        _me.nav.setRoot(login_1.LoginPage);
                     }
                 });
-                this.nav.present(modal);
             }
         }
     };

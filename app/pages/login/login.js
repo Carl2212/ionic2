@@ -16,17 +16,19 @@ var ionic_angular_1 = require('ionic-angular');
 var postrequest_1 = require('../postrequest');
 var config_1 = require('../config');
 var index_1 = require("ionic-angular/index");
-var ionic_native_1 = require('ionic-native');
+var focuser_1 = require('../directive/focuser');
+var index_2 = require("ionic-angular/index");
+var hello_ionic_1 = require('../hello-ionic/hello-ionic');
 var LoginPage = (function () {
-    function LoginPage(nav, prequest, config, vctrl) {
+    function LoginPage(nav, prequest, config, vctrl, menu) {
         this.nav = nav;
         this.prequest = prequest;
         this.config = config;
         this.vctrl = vctrl;
+        this.menu = menu;
+        this.menu.swipeEnable(false);
+        this.storage = new index_2.Storage(index_2.SqlStorage);
     }
-    LoginPage.prototype.ngOninit = function () {
-        ionic_native_1.Keyboard.show();
-    };
     LoginPage.prototype.dologin = function () {
         console.log(this.username, this.password);
         var params = { username: this.username, password: this.password };
@@ -34,21 +36,19 @@ var LoginPage = (function () {
         var _me = this;
         this.prequest.prequest(params, url, function (data) {
             if (true) {
-                console.log(_me.username);
-                data = { username: _me.username, isneedwxlogin: true };
-                _me.dismiss(data);
+                data.username = _me.username;
+                _me.storage.setJson('userinfo', { username: data.username, userid: data.userid, cnname: data.cnname, isLeader: data.isLeader });
+                _me.nav.setRoot(hello_ionic_1.HelloIonicPage);
             }
         });
-    };
-    LoginPage.prototype.dismiss = function (data) {
-        this.vctrl.dismiss(data);
     };
     LoginPage = __decorate([
         core_1.Component({
             templateUrl: "build/pages/login/login.html",
-            providers: [postrequest_1.PostRequest, config_1.ConfigComponent]
+            providers: [postrequest_1.PostRequest, config_1.ConfigComponent],
+            directives: [focuser_1.Focuser]
         }), 
-        __metadata('design:paramtypes', [ionic_angular_1.NavController, postrequest_1.PostRequest, config_1.ConfigComponent, index_1.ViewController])
+        __metadata('design:paramtypes', [ionic_angular_1.NavController, postrequest_1.PostRequest, config_1.ConfigComponent, index_1.ViewController, ionic_angular_1.MenuController])
     ], LoginPage);
     return LoginPage;
 })();

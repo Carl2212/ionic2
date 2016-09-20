@@ -93,31 +93,28 @@ export class HelloIonicPage {
         callback && callback();
     }else{
       this.username = this.getURLParam('username');
-      let userinfo = this.storage.getJson('userinfo');
-      if(this.username) {//微信 ，网页端携带参数进入
-        callback && callback();
-      //}else if(userinfo){
-      //  this.username = userinfo.username;
-      //  this.userid = userinfo.userid;
-      //  this.cnname = userinfo.cnname;
-      //  this.isLeader =userinfo.isLeader;
-      //  callback && callback(true);
-      }else{
-        //跳转到登录页面
-        let modal = Modal.create(LoginPage);
-        var _me = this;
-        modal.onDismiss(data => {
-          console.log('data',data);
-          if(data.isneedwxlogin) {//用于login接口不能调通时测试使用。
-            _me.username = data.username;
-            callback && callback();
-          }else{
-            _me.storage.setJson('userinfo',{username : data.username,userid: data.userid,cnname :data.cnname,isLeader: data.isLeader});
-            callback && callback(true);
-          }
-        });
-        this.nav.present(modal);
-      }
+
+        if(this.username) {//微信 ，网页端携带参数进入
+          callback && callback();
+        }else{
+          let _me = this;
+          this.storage.get('userinfo').then(function(userinfo) {
+            if(userinfo && userinfo.username){
+              _me.username = userinfo.username;
+              _me.userid = userinfo.userid;
+              _me.cnname = userinfo.cnname;
+              _me.isLeader =userinfo.isLeader;
+              if(_me.username && !_me.userid) {
+                callback && callback();
+              }else{
+                callback && callback(true);
+              }
+            }else{
+              //跳转到登录页面
+              _me.nav.setRoot(LoginPage);
+            }
+          });
+        }
     }
   }
   //判断登录

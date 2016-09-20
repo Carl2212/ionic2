@@ -3,16 +3,18 @@
  * 登录模态框
  */
 import {Component} from '@angular/core';
-import {NavController} from 'ionic-angular';
+import {NavController ,MenuController} from 'ionic-angular';
 import {PostRequest} from '../postrequest';
 import {ConfigComponent} from '../config';
 import {ViewController} from "ionic-angular/index";
-import {Keyboard} from 'ionic-native';
-
+import {Focuser} from '../directive/focuser';
+import {Storage, SqlStorage} from "ionic-angular/index";
+import {HelloIonicPage} from '../hello-ionic/hello-ionic';
 
 @Component({
   templateUrl : "build/pages/login/login.html",
-  providers : [PostRequest,ConfigComponent]
+  providers : [PostRequest,ConfigComponent],
+  directives :[Focuser]
 })
 export class LoginPage {
   username;
@@ -21,15 +23,18 @@ export class LoginPage {
   private prequest;
   private config;
   private vctrl;
-  constructor(nav : NavController,prequest : PostRequest ,config : ConfigComponent,vctrl : ViewController) {
+  private menu;
+  private storage;
+  constructor(nav : NavController,prequest : PostRequest ,config : ConfigComponent,vctrl : ViewController ,menu : MenuController) {
     this.nav = nav;
     this.prequest = prequest;
     this.config = config;
     this.vctrl = vctrl;
+    this.menu = menu;
+    this.menu.swipeEnable(false);
+    this.storage = new Storage(SqlStorage);
   }
-  ngOninit() {
-    Keyboard.show();
-  }
+
   dologin() {
     console.log(this.username,this.password);
     let params = {username : this.username , password : this.password};
@@ -37,13 +42,14 @@ export class LoginPage {
     var _me = this;
     this.prequest.prequest(params,url,function(data){
       if(true) {
-        console.log(_me.username);
-        data = {username : _me.username,isneedwxlogin : true};
-        _me.dismiss(data);
+        data.username = _me.username;
+        _me.storage.setJson('userinfo',{username : data.username,userid: data.userid,cnname :data.cnname,isLeader: data.isLeader});
+        _me.nav.setRoot(HelloIonicPage);
       }
     });
   }
-  dismiss(data) {
-    this.vctrl.dismiss(data);
-  }
+  //dismiss(data) {
+  //  this.menu.swipeEnable(true);
+  //  this.vctrl.dismiss(data);
+  //}
 }
