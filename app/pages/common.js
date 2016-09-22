@@ -120,6 +120,20 @@ var CommonComponent = (function () {
             }, false);
         });
     };
+    CommonComponent.prototype.getURLParam = function (key) {
+        var url = location.search; //获取url中"?"符后的字串
+        if (url.indexOf("?") != -1) {
+            var str = url.substr(1);
+            if (null == key)
+                return str;
+            var strs = str.split("&");
+            for (var i = 0; i < strs.length; i++) {
+                var perParam = strs[i].split("=");
+                if (perParam[0] == key)
+                    return perParam[1];
+            }
+        }
+    };
     CommonComponent.prototype.isEmptyObject = function (obj) {
         for (var i in obj) {
             return false;

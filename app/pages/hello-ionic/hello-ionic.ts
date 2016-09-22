@@ -15,6 +15,7 @@ import {Loading} from "../loading/loading";
 import {Alert} from'ionic-angular'
 import {ModalCmp} from "ionic-angular/components/modal/modal";
 import {LoginPage} from "../login/login";
+import {isString} from "ionic-angular/util";
 
 @Component({
   templateUrl: 'build/pages/hello-ionic/hello-ionic.html',
@@ -38,12 +39,8 @@ export class HelloIonicPage {
   private todolist;
   private commonfn;
   constructor(nav : NavController,config : ConfigComponent,postrequest : PostRequest ,commonfn : CommonComponent) {
+    console.log('1');
     this.nav = nav;
-    //let alert = Alert.create({subTitle : '传阅失败~请重试',buttons :['ok']});
-    //this.nav.present(alert);
-    //let modal = Modal.create(Loading);
-    //this.nav.present(modal);
-
     this.config = config;
     this.pages = [
       { title: 'TxlPage', component: TxlPage },
@@ -57,6 +54,9 @@ export class HelloIonicPage {
     this.storage = new Storage(SqlStorage);
     this.commonfn = commonfn;
     this.Initpage();
+  }
+  ngOnInit() {
+    console.log('8');
   }
   //页面加载初始化
   Initpage() {
@@ -92,29 +92,24 @@ export class HelloIonicPage {
       this.postrequest.prequest(jsonParams,userinfourl);
         callback && callback();
     }else{
-      this.username = this.getURLParam('username');
-
-        if(this.username) {//微信 ，网页端携带参数进入
-          callback && callback();
+      let _me = this;
+      this.storage.get('userinfo').then(function(userinfo) {
+        var userinfo = (isString(userinfo) && userinfo !='') ? JSON.parse(userinfo) : undefined;
+        if(!_me.commonfn.isEmptyObject(userinfo)){
+          _me.username = userinfo.username;
+          _me.userid = userinfo.userid;
+          _me.cnname = userinfo.cnname;
+          _me.isLeader =userinfo.isLeader;
+          if(_me.username && !_me.userid) {
+            callback && callback();
+          }else{
+            callback && callback(true);
+          }
         }else{
-          let _me = this;
-          this.storage.get('userinfo').then(function(userinfo) {
-            if(userinfo && userinfo.username){
-              _me.username = userinfo.username;
-              _me.userid = userinfo.userid;
-              _me.cnname = userinfo.cnname;
-              _me.isLeader =userinfo.isLeader;
-              if(_me.username && !_me.userid) {
-                callback && callback();
-              }else{
-                callback && callback(true);
-              }
-            }else{
-              //跳转到登录页面
-              _me.nav.setRoot(LoginPage);
-            }
-          });
+          //跳转到登录页面
+          _me.nav.setRoot(LoginPage);
         }
+      });
     }
   }
   //判断登录
@@ -171,18 +166,6 @@ export class HelloIonicPage {
       }else{
         this.nav.setRoot(this.pages[p].component);
       }
-  }
-  getURLParam(key){
-    var url = location.search; //获取url中"?"符后的字串
-    if (url.indexOf("?") != -1) {
-      var str = url.substr(1);
-      if (null == key) return str;
-      var strs = str.split("&");
-      for (var i = 0; i < strs.length; i++) {
-        var perParam = strs[i].split("=");
-        if (perParam[0] == key) return perParam[1];
-      }
-    }
   }
 }
 

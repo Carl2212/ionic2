@@ -42,8 +42,8 @@ export class LoginPage {
     var _me = this;
     this.prequest.prequest(params,url,function(data){
       if(true) {
-        data.username = _me.username;
-        _me.storage.setJson('userinfo',{username : data.username,userid: data.userid,cnname :data.cnname,isLeader: data.isLeader});
+        console.log( _me.username);
+        _me.storage.setJson('userinfo',{username : _me.username,userid: data.userid,cnname :data.cnname,isLeader: data.isLeader});
         _me.nav.setRoot(HelloIonicPage);
       }
     });

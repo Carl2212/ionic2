@@ -20,15 +20,13 @@ var config_1 = require('../config');
 var index_1 = require("ionic-angular/index");
 var common_1 = require("../common");
 var login_1 = require("../login/login");
+var util_1 = require("ionic-angular/util");
 var HelloIonicPage = (function () {
     function HelloIonicPage(nav, config, postrequest, commonfn) {
         this.todonum = 0;
         this.toreadnum = 0;
+        console.log('1');
         this.nav = nav;
-        //let alert = Alert.create({subTitle : '传阅失败~请重试',buttons :['ok']});
-        //this.nav.present(alert);
-        //let modal = Modal.create(Loading);
-        //this.nav.present(modal);
         this.config = config;
         this.pages = [
             { title: 'TxlPage', component: txl_1.TxlPage },
@@ -43,6 +41,9 @@ var HelloIonicPage = (function () {
         this.commonfn = commonfn;
         this.Initpage();
     }
+    HelloIonicPage.prototype.ngOnInit = function () {
+        console.log('8');
+    };
     //页面加载初始化
     HelloIonicPage.prototype.Initpage = function () {
         var _this = this;
@@ -79,31 +80,26 @@ var HelloIonicPage = (function () {
             callback && callback();
         }
         else {
-            this.username = this.getURLParam('username');
-            if (this.username) {
-                callback && callback();
-            }
-            else {
-                var _me = this;
-                this.storage.get('userinfo').then(function (userinfo) {
-                    if (userinfo && userinfo.username) {
-                        _me.username = userinfo.username;
-                        _me.userid = userinfo.userid;
-                        _me.cnname = userinfo.cnname;
-                        _me.isLeader = userinfo.isLeader;
-                        if (_me.username && !_me.userid) {
-                            callback && callback();
-                        }
-                        else {
-                            callback && callback(true);
-                        }
+            var _me = this;
+            this.storage.get('userinfo').then(function (userinfo) {
+                var userinfo = (util_1.isString(userinfo) && userinfo != '') ? JSON.parse(userinfo) : undefined;
+                if (!_me.commonfn.isEmptyObject(userinfo)) {
+                    _me.username = userinfo.username;
+                    _me.userid = userinfo.userid;
+                    _me.cnname = userinfo.cnname;
+                    _me.isLeader = userinfo.isLeader;
+                    if (_me.username && !_me.userid) {
+                        callback && callback();
                     }
                     else {
-                        //跳转到登录页面
-                        _me.nav.setRoot(login_1.LoginPage);
+                        callback && callback(true);
                     }
-                });
-            }
+                }
+                else {
+                    //跳转到登录页面
+                    _me.nav.setRoot(login_1.LoginPage);
+                }
+            });
         }
     };
     //判断登录
@@ -156,20 +152,6 @@ var HelloIonicPage = (function () {
         }
         else {
             this.nav.setRoot(this.pages[p].component);
-        }
-    };
-    HelloIonicPage.prototype.getURLParam = function (key) {
-        var url = location.search; //获取url中"?"符后的字串
-        if (url.indexOf("?") != -1) {
-            var str = url.substr(1);
-            if (null == key)
-                return str;
-            var strs = str.split("&");
-            for (var i = 0; i < strs.length; i++) {
-                var perParam = strs[i].split("=");
-                if (perParam[0] == key)
-                    return perParam[1];
-            }
         }
     };
     HelloIonicPage = __decorate([
