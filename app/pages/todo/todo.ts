@@ -6,6 +6,7 @@ import {NavController, NavParams} from 'ionic-angular';
 import {ConfigComponent} from "../config";
 import {PostRequest} from '../postrequest';
 import {CommonComponent} from "../common";
+import {Badge} from 'ionic-native';
 
 @Component({
   templateUrl : 'build/pages/todo/todo.html',
@@ -25,6 +26,8 @@ export class ToDoPage {
 
       });
     }
+    //清除app 图标的数量
+    Badge.clear();
   }
 
 

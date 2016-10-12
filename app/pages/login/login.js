@@ -19,8 +19,10 @@ var index_1 = require("ionic-angular/index");
 var focuser_1 = require('../directive/focuser');
 var index_2 = require("ionic-angular/index");
 var hello_ionic_1 = require('../hello-ionic/hello-ionic');
+var fingerprint_1 = require('../fingerprint');
 var LoginPage = (function () {
-    function LoginPage(nav, prequest, config, vctrl, menu) {
+    function LoginPage(nav, prequest, config, vctrl, menu, fingerprint) {
+        this.loginpage = true;
         this.nav = nav;
         this.prequest = prequest;
         this.config = config;
@@ -28,27 +30,33 @@ var LoginPage = (function () {
         this.menu = menu;
         this.menu.swipeEnable(false);
         this.storage = new index_2.Storage(index_2.SqlStorage);
+        var _me = this;
+        console.log('fingerprint.initFinger');
+        fingerprint.initFinger(function () {
+            _me.nav.setRoot(hello_ionic_1.HelloIonicPage);
+        }, function () {
+            _me.loginpage = true;
+        });
     }
     LoginPage.prototype.dologin = function () {
-        console.log(this.username, this.password);
         var params = { username: this.username, password: this.password };
         var url = this.config.getValue('global_url') + this.config.getValue('login_khd_action');
         var _me = this;
-        this.prequest.prequest(params, url, function (data) {
-            if (true) {
-                console.log(_me.username);
-                _me.storage.setJson('userinfo', { username: _me.username, userid: data.userid, cnname: data.cnname, isLeader: data.isLeader });
-                _me.nav.setRoot(hello_ionic_1.HelloIonicPage);
-            }
-        });
+        //this.prequest.prequest(params,url,function(data){
+        //  if(true) {
+        //_me.storage.setJson('userinfo',{username : _me.username,userid: data.userid,cnname :data.cnname,isLeader: data.isLeader});
+        _me.storage.setJson('userinfo', { username: _me.username });
+        _me.nav.setRoot(hello_ionic_1.HelloIonicPage);
+        //  }
+        //});
     };
     LoginPage = __decorate([
         core_1.Component({
             templateUrl: "build/pages/login/login.html",
-            providers: [postrequest_1.PostRequest, config_1.ConfigComponent],
+            providers: [postrequest_1.PostRequest, config_1.ConfigComponent, fingerprint_1.Fingerprint],
             directives: [focuser_1.Focuser]
         }), 
-        __metadata('design:paramtypes', [ionic_angular_1.NavController, postrequest_1.PostRequest, config_1.ConfigComponent, index_1.ViewController, ionic_angular_1.MenuController])
+        __metadata('design:paramtypes', [ionic_angular_1.NavController, postrequest_1.PostRequest, config_1.ConfigComponent, index_1.ViewController, ionic_angular_1.MenuController, fingerprint_1.Fingerprint])
     ], LoginPage);
     return LoginPage;
 })();

@@ -15,6 +15,7 @@ var ionic_angular_1 = require('ionic-angular');
 var config_1 = require("../config");
 var postrequest_1 = require('../postrequest');
 var common_1 = require("../common");
+var ionic_native_1 = require('ionic-native');
 var ToDoPage = (function () {
     function ToDoPage(navParams, commonfn) {
         this.commonfn = commonfn;
@@ -25,6 +26,8 @@ var ToDoPage = (function () {
                 _this.listinfo = modulelist;
             });
         }
+        //清除app 图标的数量
+        ionic_native_1.Badge.clear();
     }
     ToDoPage = __decorate([
         core_1.Component({

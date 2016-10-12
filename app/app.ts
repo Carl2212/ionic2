@@ -1,21 +1,22 @@
 import {Component, ViewChild} from '@angular/core';
 import {ionicBootstrap, Platform, MenuController, Nav} from 'ionic-angular';
-import {StatusBar} from 'ionic-native';
-import {HelloIonicPage} from './pages/hello-ionic/hello-ionic';
-import {LoginPage} from './pages/login/login';
-import {TxlPage} from './pages/txl/txl';
-import {NoticeListPage} from './pages/notice/noticelist';
-import {DocSearchPage} from './pages/docsearch/docsearch';
-import {ToDoPage} from './pages/todo/todo';
-import {ToReadPage} from './pages/toread/toread';
-import {CordovaPage} from './pages/cordova/cordova';
+import {StatusBar,AppAvailability,Device,BackgroundGeolocation} from 'ionic-native';
 import {CommonComponent} from './pages/common';
 import {ConfigComponent} from './pages/config';
 import {PostRequest} from './pages/postrequest';
 import {Storage, SqlStorage} from "ionic-angular/index";
 import {isString} from "ionic-angular/util";
-import {AppAvailability} from 'ionic-native';
-import {Device} from 'ionic-native';
+import {TxlPage} from './pages/txl/txl';
+import {NoticeListPage} from './pages/notice/noticelist';
+import {DocSearchPage} from './pages/docsearch/docsearch';
+import {ToDoPage} from './pages/todo/todo';
+import {CordovaPage} from './pages/cordova/cordova';
+import {ToReadPage} from './pages/toread/toread';
+import {HelloIonicPage} from './pages/hello-ionic/hello-ionic';
+import {LoginPage} from './pages/login/login';
+import {Badge} from 'ionic-native';
+import {BackgroundMode} from 'ionic-native';
+import {isNumber} from "ionic-angular/util";
 
 @Component({
   templateUrl: 'build/app.html',
@@ -38,7 +39,7 @@ class MyApp {
     this.getUserInfo();
     this.initializeApp();
     // set our app's pages
-    this.pages = [
+    this.pages =[
       { title: 'Hello Ionic111', component: HelloIonicPage ,params :{}},
       { title: '通讯录', component: TxlPage ,params :{}},
       { title:'待阅', component : ToReadPage ,params : {doctype : 'toread'}},
@@ -98,7 +99,35 @@ class MyApp {
         (data)=> console.log(app+'is available'),
         (error) => console.log(app+'is not available')
       );
+
+      //根据后台地理位置信息。请求不同的资源
+      let config = {
+        desiredAccuracy : 100,//地理位置比例 以米为单位
+        stationaryRadius : 20 ,//半径。精度半径
+        distanceFilter : 30 ,//
+        debug : true,
+        stopOnTerminate : false,
+      }
+      BackgroundGeolocation.configure((location) => {
+        console.log('[js] BackgroundGeolocation callback:  ' + location.latitude + ',' + location.longitude);
+        BackgroundGeolocation.finish(); // FOR IOS ONLY
+      }, (error) => {
+        console.log('BackgroundGeolocation error');
+      }, config);
+
+      BackgroundGeolocation.start();
+
+      //设置小图标数字
+      Badge.set(1);
+
+      //后台运行模式
+      if(BackgroundMode.isEnabled() || BackgroundMode.enable()) {
+        setTimeout(function(){
+          Badge.increase(1);
+        },50000);
+      }
     });
+
   }
 
   openPage(page) {

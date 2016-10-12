@@ -17,6 +17,7 @@ var postrequest_1 = require('../postrequest');
 var index_1 = require("ionic-angular/index");
 var common_1 = require("../common");
 var ionic_native_1 = require('ionic-native');
+var ionic_native_2 = require('ionic-native');
 var CordovaPage = (function () {
     function CordovaPage(navCtrl, navParams, postrequest, config, commonfn) {
         this.isdetail = false;
@@ -44,6 +45,8 @@ var CordovaPage = (function () {
         }).then(function (buttonIndex) {
             console.log('Button pressed: ' + buttonIndex);
         });
+        //设置小图标数字
+        ionic_native_2.Badge.increase(1);
     };
     //初始化页面数据
     CordovaPage.prototype.Initpage = function (module_id, pageindex) {

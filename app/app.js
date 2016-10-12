@@ -10,18 +10,18 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('@angular/core');
 var ionic_angular_1 = require('ionic-angular');
 var ionic_native_1 = require('ionic-native');
-var hello_ionic_1 = require('./pages/hello-ionic/hello-ionic');
-var login_1 = require('./pages/login/login');
-var txl_1 = require('./pages/txl/txl');
-var noticelist_1 = require('./pages/notice/noticelist');
-var docsearch_1 = require('./pages/docsearch/docsearch');
-var toread_1 = require('./pages/toread/toread');
-var cordova_1 = require('./pages/cordova/cordova');
 var common_1 = require('./pages/common');
 var config_1 = require('./pages/config');
 var postrequest_1 = require('./pages/postrequest');
 var index_1 = require("ionic-angular/index");
 var util_1 = require("ionic-angular/util");
+var txl_1 = require('./pages/txl/txl');
+var noticelist_1 = require('./pages/notice/noticelist');
+var docsearch_1 = require('./pages/docsearch/docsearch');
+var cordova_1 = require('./pages/cordova/cordova');
+var toread_1 = require('./pages/toread/toread');
+var hello_ionic_1 = require('./pages/hello-ionic/hello-ionic');
+var login_1 = require('./pages/login/login');
 var ionic_native_2 = require('ionic-native');
 var ionic_native_3 = require('ionic-native');
 var MyApp = (function () {
@@ -84,15 +84,38 @@ var MyApp = (function () {
             ionic_native_1.StatusBar.styleDefault();
             //好鸡冻。要尝试检测app是否安装的原生接口了。
             var app;
-            if (ionic_native_3.Device.device.platform == 'ios') {
-                console.log(ionic_native_3.Device.device);
+            if (ionic_native_1.Device.device.platform == 'ios') {
+                console.log(ionic_native_1.Device.device);
                 app = 'alipay://';
             }
-            else if (ionic_native_3.Device.device.platform == 'Android') {
+            else if (ionic_native_1.Device.device.platform == 'Android') {
                 app = 'com.eg.android.AlipayGphone';
-                console.log(ionic_native_3.Device.device);
+                console.log(ionic_native_1.Device.device);
             }
-            ionic_native_2.AppAvailability.check(app).then(function (data) { return console.log(app + 'is available'); }, function (error) { return console.log(app + 'is not available'); });
+            ionic_native_1.AppAvailability.check(app).then(function (data) { return console.log(app + 'is available'); }, function (error) { return console.log(app + 'is not available'); });
+            //根据后台地理位置信息。请求不同的资源
+            var config = {
+                desiredAccuracy: 100,
+                stationaryRadius: 20,
+                distanceFilter: 30,
+                debug: true,
+                stopOnTerminate: false,
+            };
+            ionic_native_1.BackgroundGeolocation.configure(function (location) {
+                console.log('[js] BackgroundGeolocation callback:  ' + location.latitude + ',' + location.longitude);
+                ionic_native_1.BackgroundGeolocation.finish(); // FOR IOS ONLY
+            }, function (error) {
+                console.log('BackgroundGeolocation error');
+            }, config);
+            ionic_native_1.BackgroundGeolocation.start();
+            //设置小图标数字
+            ionic_native_2.Badge.set(1);
+            //后台运行模式
+            if (ionic_native_3.BackgroundMode.isEnabled() || ionic_native_3.BackgroundMode.enable()) {
+                setTimeout(function () {
+                    ionic_native_2.Badge.increase(1);
+                }, 50000);
+            }
         });
     };
     MyApp.prototype.openPage = function (page) {

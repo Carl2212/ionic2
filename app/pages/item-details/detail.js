@@ -19,8 +19,11 @@ var common_1 = require("../common");
 var index_1 = require("ionic-angular/index");
 var base64pipe_1 = require("../base64pipe");
 var dotosubmit_1 = require("../dotosubmit/dotosubmit");
+var ionic_native_1 = require('ionic-native');
+var ionic_native_2 = require('ionic-native');
+var urlutil_1 = require("../urlutil");
 var DetailPage = (function () {
-    function DetailPage(navParams, navcontrol, commonfn, postrequest, config) {
+    function DetailPage(navParams, navcontrol, commonfn, postrequest, config, urlutil) {
         this.isdetail = true;
         this.isprocess = false;
         this.detailinfo = navParams.get('doc');
@@ -31,6 +34,7 @@ var DetailPage = (function () {
         this.config = config;
         this.storage = new index_1.Storage(index_1.SqlStorage);
         this.navcontrol = navcontrol;
+        this.urlutil = urlutil;
         this.getDocDetail();
         this.nextparam = [
             { doctype: 'toread', operating: '转传阅' },
@@ -80,13 +84,50 @@ var DetailPage = (function () {
     //提交待办
     DetailPage.prototype.submitTodo = function () {
     };
+    //以html方式打开预览
+    DetailPage.prototype.showhtml = function (url) {
+        //url=this.urlutil.decode(url);
+        url = 'http://baidu.com';
+        console.log(url);
+        alert(url);
+        //let browser = InAppBrowser.open(url,'_blank');
+        //console.log(browser);
+        ionic_native_2.SafariViewController.isAvailable().then(function (available) {
+            alert(available);
+            if (available) {
+                //支持safari视图打开
+                ionic_native_2.SafariViewController.show({
+                    url: url,
+                    hidden: false,
+                    animated: false,
+                    transition: 'curl',
+                    enterReaderModeIfAvailable: true,
+                    tintColor: '#ff000'
+                }).then(function (result) {
+                    alert('true');
+                    if (result.event === 'opened')
+                        console.log('opened');
+                    else if (result.event === 'loaded')
+                        console.log('loaded');
+                    else if (result.event === 'closed')
+                        console.log('Closed');
+                }, function (error) {
+                    alert('error');
+                    console.error(error);
+                });
+            }
+            else {
+                var browser = ionic_native_1.InAppBrowser.open(url, '_blank');
+            }
+        });
+    };
     DetailPage = __decorate([
         core_1.Component({
             templateUrl: 'build/pages/item-details/detail.html',
-            providers: [common_1.CommonComponent, config_1.ConfigComponent, postrequest_1.PostRequest],
+            providers: [common_1.CommonComponent, config_1.ConfigComponent, postrequest_1.PostRequest, urlutil_1.UrlUtil],
             pipes: [base64pipe_1.Base64pipe, base64pipe_1.KeysPipe]
         }), 
-        __metadata('design:paramtypes', [ionic_angular_1.NavParams, ionic_angular_1.NavController, common_1.CommonComponent, postrequest_1.PostRequest, config_1.ConfigComponent])
+        __metadata('design:paramtypes', [ionic_angular_1.NavParams, ionic_angular_1.NavController, common_1.CommonComponent, postrequest_1.PostRequest, config_1.ConfigComponent, urlutil_1.UrlUtil])
     ], DetailPage);
     return DetailPage;
 })();

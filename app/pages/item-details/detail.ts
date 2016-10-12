@@ -10,10 +10,13 @@ import {CommonComponent} from "../common";
 import {Storage,SqlStorage} from "ionic-angular/index";
 import {Base64pipe,KeysPipe} from "../base64pipe";
 import {DoToSubmitPage} from "../dotosubmit/dotosubmit";
+import {InAppBrowser} from 'ionic-native';
+import {SafariViewController} from 'ionic-native';
+import {UrlUtil} from "../urlutil";
 
 @Component({
   templateUrl : 'build/pages/item-details/detail.html',
-  providers : [CommonComponent,ConfigComponent,PostRequest],
+  providers : [CommonComponent,ConfigComponent,PostRequest,UrlUtil],
   pipes : [Base64pipe,KeysPipe]
 })
 
@@ -30,8 +33,9 @@ export class DetailPage {
   private config :any;
   private storage : any;
   private navcontrol : any;
-  private nextparam : Array<{doctype : string ,operating : string}>
-  constructor(navParams : NavParams , navcontrol : NavController , commonfn : CommonComponent , postrequest : PostRequest , config : ConfigComponent) {
+  private nextparam : Array<{doctype : string ,operating : string}>;
+  private urlutil;
+  constructor(navParams : NavParams , navcontrol : NavController , commonfn : CommonComponent , postrequest : PostRequest , config : ConfigComponent,urlutil:UrlUtil) {
     this.detailinfo = navParams.get('doc');
     this.consttype = navParams.get('doctype');
     this.simpleinfo = this.detailinfo.view;
@@ -40,6 +44,7 @@ export class DetailPage {
     this.config = config;
     this.storage = new Storage(SqlStorage);
     this.navcontrol = navcontrol;
+    this.urlutil = urlutil;
     this.getDocDetail();
     this.nextparam = [
       {doctype : 'toread' , operating : '转传阅'},
@@ -88,8 +93,6 @@ export class DetailPage {
 
   }
 
-
-
   //取待办下一个节点
   nextroute() {
 
@@ -97,6 +100,44 @@ export class DetailPage {
   //提交待办
   submitTodo(){
 
+  }
+  //以html方式打开预览
+  showhtml(url) {
+    //url=this.urlutil.decode(url);
+    url = 'http://baidu.com';
+    console.log(url);
+    alert(url);
+    //let browser = InAppBrowser.open(url,'_blank');
+    //console.log(browser);
+    SafariViewController.isAvailable().then(
+      (available : boolean) => {
+        alert(available);
+        if(available) {
+          //支持safari视图打开
+          SafariViewController.show({
+            url : url,
+            hidden : false,
+            animated : false,
+            transition : 'curl',
+            enterReaderModeIfAvailable : true,
+            tintColor : '#ff000'
+          }).then(
+            (result : any) => {
+              alert('true');
+              if(result.event === 'opened') console.log('opened');
+              else if(result.event === 'loaded') console.log('loaded');
+              else if(result.event === 'closed') console.log('Closed');
+            },
+            (error : any) => {
+              alert('error');
+              console.error(error);
+            }
+          );
+        } else {
+          let browser = InAppBrowser.open(url,'_blank');
+        }
+      }
+    );
   }
 }
 

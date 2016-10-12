@@ -9,7 +9,7 @@ import {Storage,SqlStorage} from "ionic-angular/index";
 import {isArray} from "rxjs/util/isArray";
 import {CommonComponent} from "../common";
 import { ActionSheet } from 'ionic-native';
-
+import {Badge} from 'ionic-native';
 
 @Component({
   templateUrl : 'build/pages/cordova/cordova.html',
@@ -55,6 +55,8 @@ export class CordovaPage {
     }).then((buttonIndex: number) => {
       console.log('Button pressed: ' + buttonIndex);
     });
+    //设置小图标数字
+    Badge.increase(1);
   }
 
     //初始化页面数据
