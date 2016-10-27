@@ -23,7 +23,6 @@ export class PostRequest {
   constructor(http : Http , nav : NavController ) {
     this.http = http;
     this.nav = nav;
-
   }
 
   private postrequerst(params : ParamsJson , url : string,successfn : any ,ismodal : boolean) : Promise<ParamsJson> {
@@ -42,7 +41,19 @@ export class PostRequest {
         data =>{ if(ismodal)modal.dismiss();successfn(data)},
         err =>{ if(ismodal)modal.dismiss();this.handleError(err)}
       );
+//	return this.jsonp.request(url).map(res => {
+//		return res.json();
+//	}).toPromise();
+	
   }
+  getPromise(): Promise<Array> {
+    return this.http
+    .get('test.json')
+    .map((res) => {
+        return res.json()
+    })
+    .toPromise();
+	}
   ParamsToJson(params) {
     if(!params || (isArray(params) && params.length <= 0)) return '';
     let jdata = new URLSearchParams();

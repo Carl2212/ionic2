@@ -3,8 +3,8 @@ var gulp = require('gulp'),
     del = require('del'),
     runSequence = require('run-sequence'),
     argv = process.argv;
-//var karma = require('karma').server;
-//var typescript = require('gulp-tsc');
+var karma = require('karma').server;
+var typescript = require('gulp-tsc');
 /**
  * Ionic hooks
  * Add ':before' or ':after' to any Ionic project command name to run the specified
@@ -90,11 +90,11 @@ gulp.task('lint', tslint);
 /**
 * Test task, run test once and exit
 */
-//gulp.task('test', function(done) {
-//    karma.start({
-//        configFile: __dirname + '/test/my.conf.js',
-//        singleRun: true
-//    }, function() {
-//        done();
-//    });
-//});
+gulp.task('test', function(done) {
+    karma.start({
+        configFile: __dirname + '/test/my.conf.js',
+        singleRun: true
+    }, function() {
+        done();
+    });
+});

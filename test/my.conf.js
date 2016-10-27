@@ -15,14 +15,12 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      //'../bower_components/angular/angular.js',
-      //'../www/build/js/es6-shim.min.js',
-      //'../www/build/js/Reflect.js',
-      //'../www/build/js/zone.js',
-      //'../www/build/js/app.bundle.js',
-      //'../www/build/js/es6-shim.min.js',
-      //'../bower_components/angular-mocks/angular-mocks.js',
-      '**/*tests.js'
+      '../bower_components/angular/angular.js',
+      '../www/build/js/es6-shim.min.js',
+      '../www/build/js/Reflect.js',
+      '../www/build/js/zone.js',
+      '../bower_components/angular-mocks/angular-mocks.js',
+      '**/*test.js'
     ],
 
 
@@ -34,6 +32,7 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
+
     },
 
 
